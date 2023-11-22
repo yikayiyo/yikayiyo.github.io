@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icon.png">
+  <link rel="mask-icon" href="/icon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yikayiyo.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="https:&#x2F;&#x2F;developer.yahoo.com&#x2F;performance&#x2F;rules.html?guccounter&#x3D;1#csslink  Content Server Cookie CSS JavaScript Images Mobile  原文从七个方面总结网站性能提升。 本篇总结Javascript、Images方面。 JavascriptPut Scripts at Bottom 脚">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网站性能提升最佳实践四">
+<meta property="og:url" content="https://yikayiyo.github.io/2020/06/30/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E5%9B%9B/index.html">
+<meta property="og:site_name" content="Misbehavior">
+<meta property="og:description" content="https:&#x2F;&#x2F;developer.yahoo.com&#x2F;performance&#x2F;rules.html?guccounter&#x3D;1#csslink  Content Server Cookie CSS JavaScript Images Mobile  原文从七个方面总结网站性能提升。 本篇总结Javascript、Images方面。 JavascriptPut Scripts at Bottom 脚">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-06-30T03:08:45.000Z">
+<meta property="article:modified_time" content="2023-11-22T10:18:22.938Z">
+<meta property="article:author" content="yikayiyo">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="翻译">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://yikayiyo.github.io/2020/06/30/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E5%9B%9B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yikayiyo.github.io/2020/06/30/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E5%9B%9B/","path":"2020/06/30/网站性能提升最佳实践四/","title":"网站性能提升最佳实践四"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>网站性能提升最佳实践四 | Misbehavior</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="Misbehavior" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Misbehavior</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Javascript"><span class="nav-number">1.</span> <span class="nav-text">Javascript</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Put-Scripts-at-Bottom-%E8%84%9A%E6%9C%AC%E6%94%BE%E5%9C%A8%E5%BA%95%E9%83%A8"><span class="nav-number">1.1.</span> <span class="nav-text">Put Scripts at Bottom 脚本放在底部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Make-JavaScript-and-CSS-External-%E4%BB%8E%E5%A4%96%E9%83%A8%E5%BC%95%E7%94%A8js%E8%84%9A%E6%9C%AC%E5%92%8Ccss%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text">Make JavaScript and CSS External 从外部引用js脚本和css文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Minify-JavaScript-and-CSS-%E5%8E%8B%E7%BC%A9JavaScript%E5%92%8CCSS"><span class="nav-number">1.3.</span> <span class="nav-text">Minify JavaScript and CSS 压缩JavaScript和CSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Remove-Duplicate-Scripts-%E5%88%A0%E9%99%A4%E9%87%8D%E5%A4%8D%E8%84%9A%E6%9C%AC"><span class="nav-number">1.4.</span> <span class="nav-text">Remove Duplicate Scripts 删除重复脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Minimize-DOM-Access-%E6%9C%80%E5%B0%8F%E5%8C%96DOM%E8%AE%BF%E9%97%AE"><span class="nav-number">1.5.</span> <span class="nav-text">Minimize DOM Access 最小化DOM访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Develop-Smart-Event-Handlers-%E5%BC%80%E5%8F%91%E8%81%AA%E6%98%8E%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="nav-number">1.6.</span> <span class="nav-text">Develop Smart Event Handlers 开发聪明的事件处理程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Images"><span class="nav-number">2.</span> <span class="nav-text">Images</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Optimize-Images-%E4%BC%98%E5%8C%96%E5%9B%BE%E7%89%87"><span class="nav-number">2.1.</span> <span class="nav-text">Optimize Images 优化图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Optimize-CSS-Sprites-%E4%BC%98%E5%8C%96CSS-Sprites"><span class="nav-number">2.2.</span> <span class="nav-text">Optimize CSS Sprites 优化CSS Sprites</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Do-Not-Scale-Images-in-HTML-%E4%B8%8D%E5%9C%A8HTML%E4%B8%AD%E7%BC%A9%E6%94%BE%E5%9B%BE%E7%89%87"><span class="nav-number">2.3.</span> <span class="nav-text">Do Not Scale Images in HTML 不在HTML中缩放图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Make-favicon-ico-Small-and-Cacheable-%E5%9B%BE%E6%A0%87%E8%A6%81%E5%B0%8F%E3%80%81%E5%8F%AF%E7%BC%93%E5%AD%98"><span class="nav-number">2.4.</span> <span class="nav-text">Make favicon.ico Small and Cacheable 图标要小、可缓存</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yikayiyo"
+      src="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+  <p class="site-author-name" itemprop="name">yikayiyo</p>
+  <div class="site-description" itemprop="description">浪漫在哪里</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yikayiyo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yikayiyo" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2020/06/30/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E5%9B%9B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+      <meta itemprop="name" content="yikayiyo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Misbehavior">
+      <meta itemprop="description" content="浪漫在哪里">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="网站性能提升最佳实践四 | Misbehavior">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          网站性能提升最佳实践四
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-06-30 11:08:45" itemprop="dateCreated datePublished" datetime="2020-06-30T11:08:45+08:00">2020-06-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a href="https://developer.yahoo.com/performance/rules.html?guccounter=1#csslink">https://developer.yahoo.com/performance/rules.html?guccounter=1#csslink</a></p>
+<ul>
+<li>Content</li>
+<li>Server</li>
+<li>Cookie</li>
+<li>CSS</li>
+<li>JavaScript</li>
+<li>Images</li>
+<li>Mobile</li>
+</ul>
+<p>原文从七个方面总结网站性能提升。</p>
+<p>本篇总结Javascript、Images方面。</p>
+<h2 id="Javascript"><a href="#Javascript" class="headerlink" title="Javascript"></a>Javascript</h2><h3 id="Put-Scripts-at-Bottom-脚本放在底部"><a href="#Put-Scripts-at-Bottom-脚本放在底部" class="headerlink" title="Put Scripts at Bottom 脚本放在底部"></a><a href="https://developer.yahoo.com/performance/rules.html#js_bottom">Put Scripts at Bottom</a> 脚本放在底部</h3><p>脚本会阻塞并行下载</p>
+<p><a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html#sec8.1.4">HTTP / 1.1规范</a>建议浏览器每个主机名并行下载最多两个组件</p>
+<p>如果有多个主机名提供<strong>图像</strong>，则可以并行进行两个以上的下载，但是在下载<strong>脚本</strong>时，即使使用不同的主机名，浏览器也不会启动任何其他下载</p>
+<p>defer脚本表示脚本不包含document.write，浏览器可以继续渲染</p>
+<p>通常一个脚本如果可以defered，那它也可以移动到页面底部</p>
+<h3 id="Make-JavaScript-and-CSS-External-从外部引用js脚本和css文件"><a href="#Make-JavaScript-and-CSS-External-从外部引用js脚本和css文件" class="headerlink" title="Make JavaScript and CSS External 从外部引用js脚本和css文件"></a><a href="https://developer.yahoo.com/performance/rules.html#external">Make JavaScript and CSS External</a> 从外部引用js脚本和css文件</h3><p>在HTML文档中内嵌的JavaScript和CSS会在每次请求HTML文档时被下载</p>
+<p>使用外部文件通常会产生更快的页面，因为JavaScript和CSS文件被浏览器缓存</p>
+<p>如果JavaScript和CSS在外部文件中，并且被浏览器缓存，则在不增加HTTP请求次数的情况下减小了HTML文档的大小</p>
+<p>如果用户每次会话都有多个页面浏览，并且许多页面重复使用相同的脚本和样式表，那么缓存外部文件的潜在好处就更大</p>
+<p>对于主页，这种每次会话只访问一次的页面，将js和css内联可能更好</p>
+<p>一个样例：</p>
+<p>对于许多浏览页面的第一个页面，内联js和css（减少请求次数，该页面<strong>加载完后动态下载</strong>外部文件，随后访问的页面会使用这些<strong>缓存</strong></p>
+<h3 id="Minify-JavaScript-and-CSS-压缩JavaScript和CSS"><a href="#Minify-JavaScript-and-CSS-压缩JavaScript和CSS" class="headerlink" title="Minify JavaScript and CSS 压缩JavaScript和CSS"></a><a href="https://developer.yahoo.com/performance/rules.html#minify">Minify JavaScript and CSS</a> 压缩JavaScript和CSS</h3><p>压缩代码指的是删除不必要的代码，减小代码体积（因此可以提升响应性能</p>
+<p>混淆代码也是减小代码体积的方法，但是is more risky</p>
+<p>除了压缩外部脚本和样式之外，可以并且也应该压缩内联的<code>&lt;script&gt;</code>和<code>&lt;style&gt;</code>块。</p>
+<p>即使脚本和css文件已经被gzip了，压缩还能让它们的体积减少5%以上</p>
+<p><a href="https://tool.oschina.net/jscompress">在线压缩工具</a></p>
+<span id="more"></span>
+
+<h3 id="Remove-Duplicate-Scripts-删除重复脚本"><a href="#Remove-Duplicate-Scripts-删除重复脚本" class="headerlink" title="Remove Duplicate Scripts 删除重复脚本"></a><a href="https://developer.yahoo.com/performance/rules.html#js_dupes">Remove Duplicate Scripts</a> 删除重复脚本</h3><p>重复脚本出现的两个关键因素：</p>
+<ul>
+<li>脚本数量太多</li>
+<li>团队人数太多</li>
+</ul>
+<p>重复脚本因为浪费HTTP请求和Js执行而损害性能</p>
+<p>避免方法：</p>
+<ul>
+<li><p>使用script标签引入js脚本（不都是这么做的吗？</p>
+</li>
+<li><p>php代码</p>
+<figure class="highlight php"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">insertScript</span>(<span class="string">"menu.js"</span>) <span class="meta">?&gt;</span></span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h3 id="Minimize-DOM-Access-最小化DOM访问"><a href="#Minimize-DOM-Access-最小化DOM访问" class="headerlink" title="Minimize DOM Access 最小化DOM访问"></a><a href="https://developer.yahoo.com/performance/rules.html#dom_access">Minimize DOM Access</a> 最小化DOM访问</h3><p>使用JavaScript访问DOM元素的速度很慢，因此，为了使页面更具响应性，应该：</p>
+<ul>
+<li><p>缓存对已访问元素的引用</p>
+</li>
+<li><p>“离线”更新节点，然后将其添加到树中</p>
+</li>
+<li><p>避免使用JavaScript修复布局</p>
+</li>
+</ul>
+<h3 id="Develop-Smart-Event-Handlers-开发聪明的事件处理程序"><a href="#Develop-Smart-Event-Handlers-开发聪明的事件处理程序" class="headerlink" title="Develop Smart Event Handlers 开发聪明的事件处理程序"></a><a href="https://developer.yahoo.com/performance/rules.html#events">Develop Smart Event Handlers</a> 开发聪明的事件处理程序</h3><p>如果div中有10个按钮，则仅将一个事件处理程序附加到div包装器上，而不是为每个按钮附加一个处理程序</p>
+<p>无需等待onload事件即可开始对DOM树进行操作</p>
+<p>DOMContentLoaded可能更适合使用</p>
+<h2 id="Images"><a href="#Images" class="headerlink" title="Images"></a>Images</h2><h3 id="Optimize-Images-优化图片"><a href="#Optimize-Images-优化图片" class="headerlink" title="Optimize Images 优化图片"></a><a href="https://developer.yahoo.com/performance/rules.html#opt_images">Optimize Images</a> 优化图片</h3><p>检查GIF，看看它们是否使用了与图像中颜色数量相对应的调色板大小</p>
+<p>尝试将GIFs转换为PNGs</p>
+<p>使用<a href="https://pmt.sourceforge.io/pngcrush/">pngcrush</a>压缩PNG</p>
+<p>使用<a href="https://jpegclub.org/">jpegtran</a>处理JPEG</p>
+<h3 id="Optimize-CSS-Sprites-优化CSS-Sprites"><a href="#Optimize-CSS-Sprites-优化CSS-Sprites" class="headerlink" title="Optimize CSS Sprites 优化CSS Sprites"></a><a href="https://developer.yahoo.com/performance/rules.html#opt_sprites">Optimize CSS Sprites</a> 优化CSS Sprites</h3><p>将sprite中的图像水平排列，而不是垂直排列，通常会生成较小的文件</p>
+<p>将sprite中相近的颜色组合，有助于保持较低的颜色数量</p>
+<p>“要mobile-friendly”，不要在sprite中的图像之间留下大的空隙</p>
+<h3 id="Do-Not-Scale-Images-in-HTML-不在HTML中缩放图片"><a href="#Do-Not-Scale-Images-in-HTML-不在HTML中缩放图片" class="headerlink" title="Do Not Scale Images in HTML 不在HTML中缩放图片"></a><a href="https://developer.yahoo.com/performance/rules.html#no_scale">Do Not Scale Images in HTML</a> 不在HTML中缩放图片</h3><p>需要多大的图片就使用多大的图片</p>
+<p>例子：</p>
+<p>需要一个100x100的图片，不要来个500x500的图片然后去压缩它</p>
+<h3 id="Make-favicon-ico-Small-and-Cacheable-图标要小、可缓存"><a href="#Make-favicon-ico-Small-and-Cacheable-图标要小、可缓存" class="headerlink" title="Make favicon.ico Small and Cacheable 图标要小、可缓存"></a><a href="https://developer.yahoo.com/performance/rules.html#favicon">Make favicon.ico Small and Cacheable</a> 图标要小、可缓存</h3><p>favicon.ico 即使你不关心它，浏览器也会请求它，最好不要使用404响应它</p>
+<p>由于它在同一台服务器上，因此每次请求时都会发送cookie</p>
+<p>它还会干扰下载顺序</p>
+<p>为了克服弊端：</p>
+<ul>
+<li>保证它尽可能小，最好小于1K</li>
+<li>根据需要设置Expires过期头（图标的名字不能改</li>
+</ul>
+<p><a href="http://www.imagemagick.org/">Imagemagick</a> 可以帮助你创建小图标</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+              <a href="/tags/%E7%BF%BB%E8%AF%91/" rel="tag"># 翻译</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/09/01/styled-components%20+%20form%E5%B0%8F%E9%97%AE%E9%A2%98/" rel="prev" title="styled-components + form小问题">
+                  <i class="fa fa-angle-left"></i> styled-components + form小问题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/06/30/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%B8%89/" rel="next" title="网站性能提升最佳实践三">
+                  网站性能提升最佳实践三 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">riki</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">37k</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
+</html>

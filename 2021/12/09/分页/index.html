@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icon.png">
+  <link rel="mask-icon" href="/icon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yikayiyo.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="记录开发duozhuavue💚主页的分页功能时的实践。 关于分页分页的样子 有编号的分页   无编号，点击加载   无编号，滚动加载">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分页">
+<meta property="og:url" content="https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/index.html">
+<meta property="og:site_name" content="Misbehavior">
+<meta property="og:description" content="记录开发duozhuavue💚主页的分页功能时的实践。 关于分页分页的样子 有编号的分页   无编号，点击加载   无编号，滚动加载">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/page1.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/page2.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/page3.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/fetchMore-no-cache.gif">
+<meta property="og:image" content="https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/fetchMore-with-cache.gif">
+<meta property="og:image" content="https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/cache-ok.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/cache-ops.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/fetchMore.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/without-cache.gif">
+<meta property="og:image" content="https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/with-cache.gif">
+<meta property="article:published_time" content="2021-12-09T05:53:39.000Z">
+<meta property="article:modified_time" content="2023-11-22T12:10:54.368Z">
+<meta property="article:author" content="yikayiyo">
+<meta property="article:tag" content="graphql">
+<meta property="article:tag" content="apollo client">
+<meta property="article:tag" content="vue-apollo">
+<meta property="article:tag" content="duozhuavue">
+<meta property="article:tag" content="pagination">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/page1.png">
+
+
+<link rel="canonical" href="https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/","path":"2021/12/09/分页/","title":"分页"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>分页 | Misbehavior</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="Misbehavior" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Misbehavior</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%88%86%E9%A1%B5"><span class="nav-number">1.</span> <span class="nav-text">关于分页</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E9%A1%B5%E7%9A%84%E6%A0%B7%E5%AD%90"><span class="nav-number">1.1.</span> <span class="nav-text">分页的样子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%B3%E8%BD%AC%E5%88%B0%E4%B8%8B%E4%B8%80%E9%A1%B5%E6%97%B6%E8%A6%81%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">1.2.</span> <span class="nav-text">跳转到下一页时要做什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%83%B3%E8%A6%81%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">1.3.</span> <span class="nav-text">想要的功能</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%9D%E8%AF%95"><span class="nav-number">2.</span> <span class="nav-text">尝试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">基本配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#graphql-%E6%9F%A5%E8%AF%A2%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.1.1.</span> <span class="nav-text">graphql 查询设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%BC%93%E5%AD%98%E5%90%88%E5%B9%B6%E7%AD%96%E7%95%A5"><span class="nav-number">2.1.2.</span> <span class="nav-text">设置缓存合并策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-fetchMore"><span class="nav-number">2.2.</span> <span class="nav-text">使用 fetchMore()</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.2.1.</span> <span class="nav-text">查询设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%96%E6%AC%A1%E4%BD%BF%E7%94%A8"><span class="nav-number">2.2.2.</span> <span class="nav-text">首次使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%B7%E6%96%B0%E9%A1%B5%E9%9D%A2%E5%90%8E"><span class="nav-number">2.2.3.</span> <span class="nav-text">刷新页面后</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E5%8F%8A%E9%97%AE%E9%A2%98"><span class="nav-number">2.2.4.</span> <span class="nav-text">效果及问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="nav-number">2.2.4.1.</span> <span class="nav-text">问题分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">2.2.4.2.</span> <span class="nav-text">解决方法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-useQuery"><span class="nav-number">2.3.</span> <span class="nav-text">使用 useQuery</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2%E8%AE%BE%E7%BD%AE-1"><span class="nav-number">2.3.1.</span> <span class="nav-text">查询设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%96%E6%AC%A1%E4%BD%BF%E7%94%A8-1"><span class="nav-number">2.3.2.</span> <span class="nav-text">首次使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%B7%E6%96%B0%E9%A1%B5%E9%9D%A2"><span class="nav-number">2.3.3.</span> <span class="nav-text">刷新页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">2.3.4.</span> <span class="nav-text">问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E6%96%B0%E5%AE%9A%E4%B9%89%E7%BC%93%E5%AD%98%E5%90%88%E5%B9%B6%E7%AD%96%E7%95%A5"><span class="nav-number">2.4.</span> <span class="nav-text">重新定义缓存合并策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#trade-off"><span class="nav-number">2.5.</span> <span class="nav-text">trade-off</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9E%E5%88%B0%E6%9C%80%E5%88%9D%E7%9A%84%E8%B5%B7%E7%82%B9"><span class="nav-number">2.6.</span> <span class="nav-text">回到最初的起点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">2.7.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yikayiyo"
+      src="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+  <p class="site-author-name" itemprop="name">yikayiyo</p>
+  <div class="site-description" itemprop="description">浪漫在哪里</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yikayiyo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yikayiyo" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2021/12/09/%E5%88%86%E9%A1%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+      <meta itemprop="name" content="yikayiyo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Misbehavior">
+      <meta itemprop="description" content="浪漫在哪里">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="分页 | Misbehavior">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          分页
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-12-09 13:53:39" itemprop="dateCreated datePublished" datetime="2021-12-09T13:53:39+08:00">2021-12-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-11-22 20:10:54" itemprop="dateModified" datetime="2023-11-22T20:10:54+08:00">2023-11-22</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>记录开发<a href="https://duozhuavue.vercel.app/book">duozhuavue<span class="emoji" alias="green_heart" style="" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f49a.png?v8">💚</span></a>主页的分页功能时的实践。</p>
+<h1 id="关于分页"><a href="#关于分页" class="headerlink" title="关于分页"></a>关于分页</h1><h2 id="分页的样子"><a href="#分页的样子" class="headerlink" title="分页的样子"></a>分页的样子</h2><ol>
+<li><p>有编号的分页</p>
+<img src="/2021/12/09/%E5%88%86%E9%A1%B5/page1.png" class="" width="500" title="有编号的分页">
+</li>
+<li><p>无编号，点击加载</p>
+<img src="/2021/12/09/%E5%88%86%E9%A1%B5/page2.png" class="" width="500" title="点击获取下一页数据">
+</li>
+<li><p>无编号，滚动加载</p>
+<img src="/2021/12/09/%E5%88%86%E9%A1%B5/page3.png" class="" width="500" title="滚动到特定位置获取下一页数据"></li>
+</ol>
+<span id="more"></span>
+
+<h2 id="跳转到下一页时要做什么"><a href="#跳转到下一页时要做什么" class="headerlink" title="跳转到下一页时要做什么"></a>跳转到下一页时要做什么</h2><ol>
+<li><p>获取数据</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//根据传入的参数获取新数据</span></span><br><span class="line"><span class="keyword">const</span> incoming = <span class="title function_">getNextPage</span>(...);</span><br></pre></td></tr></tbody></table></figure>
+</li>
+<li><p>更新缓存</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 每个字段都可以有自己的 merge() 函数用于配置缓存合并策略</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">merge</span>(<span class="params">existing, incoming</span>) {</span><br><span class="line">    ...</span><br><span class="line">    existing = [...existing, ...incoming];</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> existing;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+</ol>
+<h2 id="想要的功能"><a href="#想要的功能" class="headerlink" title="想要的功能"></a>想要的功能</h2><p>在已经<strong>有缓存</strong>的情况下，<strong>分页读取、显示</strong>（paginated read）缓存数据。</p>
+<h1 id="尝试"><a href="#尝试" class="headerlink" title="尝试"></a>尝试</h1><h2 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h2><h3 id="graphql-查询设置"><a href="#graphql-查询设置" class="headerlink" title="graphql 查询设置"></a><code>graphql</code> 查询设置</h3><figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// first: 获取几个分类</span></span><br><span class="line"><span class="comment">// after: 从哪个分类开始获取分类</span></span><br><span class="line"><span class="comment">// itemsFirst: 每个分类下获取几本图书</span></span><br><span class="line"><span class="comment">// itemsAfter: 从哪个地方开始获取图书</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">GET_CATEGORY_FEED</span> = gql`<span class="language-graphql"></span></span><br><span class="line"><span class="language-graphql">  <span class="keyword">query</span> getCategoryFeed<span class="punctuation">(</span></span></span><br><span class="line"><span class="language-graphql">    <span class="variable">$first</span>: Int</span></span><br><span class="line"><span class="language-graphql">    <span class="variable">$after</span>: String</span></span><br><span class="line"><span class="language-graphql">    <span class="variable">$itemsFirst</span>: Int</span></span><br><span class="line"><span class="language-graphql">    <span class="variable">$itemsAfter</span>: String</span></span><br><span class="line"><span class="language-graphql">  <span class="punctuation">)</span> <span class="punctuation">{</span></span></span><br><span class="line"><span class="language-graphql">    categoryFeed<span class="punctuation">(</span><span class="symbol">first</span><span class="punctuation">:</span> <span class="variable">$first</span>, <span class="symbol">after</span><span class="punctuation">:</span> <span class="variable">$after</span>) <span class="punctuation">{</span></span></span><br><span class="line"><span class="language-graphql">      pageInfo <span class="punctuation">{</span></span></span><br><span class="line"><span class="language-graphql">        hasNextPage</span></span><br><span class="line"><span class="language-graphql">        endCursor</span></span><br><span class="line"><span class="language-graphql">      <span class="punctuation">}</span></span></span><br><span class="line"><span class="language-graphql">      edges <span class="punctuation">{</span></span></span><br><span class="line"><span class="language-graphql">        node <span class="punctuation">{</span></span></span><br><span class="line"><span class="language-graphql">          id</span></span><br><span class="line"><span class="language-graphql">          name</span></span><br><span class="line"><span class="language-graphql">          items<span class="punctuation">(</span><span class="symbol">first</span><span class="punctuation">:</span> <span class="variable">$itemsFirst</span>, <span class="symbol">after</span><span class="punctuation">:</span> <span class="variable">$itemsAfter</span>) <span class="punctuation">{</span></span></span><br><span class="line"><span class="language-graphql">            pageInfo <span class="punctuation">{</span></span></span><br><span class="line"><span class="language-graphql">              endCursor</span></span><br><span class="line"><span class="language-graphql">              hasNextPage</span></span><br><span class="line"><span class="language-graphql">            <span class="punctuation">}</span></span></span><br><span class="line"><span class="language-graphql">            edges <span class="punctuation">{</span></span></span><br><span class="line"><span class="language-graphql">              node <span class="punctuation">{</span></span></span><br><span class="line"><span class="language-graphql">                id</span></span><br><span class="line"><span class="language-graphql">                title</span></span><br><span class="line"><span class="language-graphql">                rawAuthor</span></span><br><span class="line"><span class="language-graphql">                doubanRating</span></span><br><span class="line"><span class="language-graphql">                originalPrice</span></span><br><span class="line"><span class="language-graphql">                image</span></span><br><span class="line"><span class="language-graphql">              <span class="punctuation">}</span></span></span><br><span class="line"><span class="language-graphql">            <span class="punctuation">}</span></span></span><br><span class="line"><span class="language-graphql">          <span class="punctuation">}</span></span></span><br><span class="line"><span class="language-graphql">        <span class="punctuation">}</span></span></span><br><span class="line"><span class="language-graphql">      <span class="punctuation">}</span></span></span><br><span class="line"><span class="language-graphql">    <span class="punctuation">}</span></span></span><br><span class="line"><span class="language-graphql">  <span class="punctuation">}</span></span></span><br><span class="line"><span class="language-graphql">`</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>关于 <code>categoryFeed</code> 中的 <code>pageInfo</code> 和 <code>edges</code>，可以参考 <a href="https://relay.dev/graphql/connections.htm#">GraphQL Cursor Connections Specification</a></p>
+<h3 id="设置缓存合并策略"><a href="#设置缓存合并策略" class="headerlink" title="设置缓存合并策略"></a>设置缓存合并策略</h3><figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Query</span>: {</span><br><span class="line">    <span class="attr">fields</span>: {</span><br><span class="line">        <span class="attr">categoryFeed</span>: {</span><br><span class="line">            ...<span class="title function_">relayStylePagination</span>(),</span><br><span class="line">            <span class="attr">keyArgs</span>: <span class="literal">false</span>,</span><br><span class="line">            <span class="comment">// 自定义read函数，实现分页读取缓存</span></span><br><span class="line">            <span class="title function_">read</span>(<span class="params">existing, {args: {first, after}}</span>) {</span><br><span class="line">                <span class="keyword">const</span> res = {};</span><br><span class="line">                <span class="comment">// 根据 after 参数选择缓存中的数据返回</span></span><br><span class="line">                res = {...}</span><br><span class="line">                <span class="keyword">return</span> res;</span><br><span class="line">            }</span><br><span class="line">        },</span><br><span class="line">    },</span><br><span class="line">},</span><br></pre></td></tr></tbody></table></figure>
+
+<p>缓存的合并策略，可以参考 <a href="https://www.apollographql.com/docs/react/caching/cache-field-behavior/">Customizing the behavior of cached fields</a></p>
+<p><code>relayStylePagination</code> 可以参考 <a href="https://www.apollographql.com/docs/react/pagination/cursor-based/#relay-style-cursor-pagination">Relay-style cursor pagination</a></p>
+<h2 id="使用-fetchMore"><a href="#使用-fetchMore" class="headerlink" title="使用 fetchMore()"></a>使用 fetchMore()</h2><h3 id="查询设置"><a href="#查询设置" class="headerlink" title="查询设置"></a>查询设置</h3><figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> after = <span class="title function_">ref</span>(<span class="string">''</span>) <span class="comment">// 从哪里开始获取数据</span></span><br><span class="line"><span class="keyword">const</span> first = <span class="title function_">ref</span>(<span class="number">1</span>) <span class="comment">// 获取几条数据</span></span><br><span class="line"><span class="keyword">const</span> {</span><br><span class="line">  <span class="attr">result</span>: categoryFeedResult,</span><br><span class="line">  <span class="attr">loading</span>: categoryFeedLoading,</span><br><span class="line">  <span class="attr">error</span>: categoryFeedError,</span><br><span class="line">  fetchMore</span><br><span class="line">} = <span class="title function_">useQuery</span>(<span class="variable constant_">GET_CATEGORY_FEED</span>, <span class="function">() =&gt;</span> ({</span><br><span class="line">  <span class="attr">after</span>: after.<span class="property">value</span>,</span><br><span class="line">  <span class="attr">first</span>: first.<span class="property">value</span>,</span><br><span class="line">  <span class="attr">itemsAfter</span>: <span class="string">''</span>,</span><br><span class="line">  <span class="attr">itemsFirst</span>: <span class="number">3</span></span><br><span class="line">}))</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="首次使用"><a href="#首次使用" class="headerlink" title="首次使用"></a>首次使用</h3><ol>
+<li><p>页面加载</p>
+<p>请求第一条数据，缓存为空，于是请求服务器，获得第一条数据，写入缓存，返回给页面</p>
+</li>
+<li><p>点击<u>加载更多分类</u></p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loadMoreCategories = <span class="keyword">function</span> (<span class="params"></span>) {</span><br><span class="line">  <span class="title function_">fetchMore</span>({</span><br><span class="line">    <span class="attr">variables</span>: {</span><br><span class="line">      <span class="attr">after</span>: cursor.<span class="property">value</span> <span class="comment">// 这里的cursor是第一页数据的 pageInfo 中的信息</span></span><br><span class="line">    }</span><br><span class="line">  }).<span class="title function_">then</span>(<span class="function">(<span class="params">{ data: { categoryFeed } }</span>) =&gt;</span> {</span><br><span class="line">    after.<span class="property">value</span> = categoryFeed.<span class="property">pageInfo</span>.<span class="property">endCursor</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(</span><br><span class="line">      <span class="string">'$after is updated, there will be a new categoryFeed query...'</span></span><br><span class="line">    )</span><br><span class="line">  })</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>调用 <code>loadMoreCategories()</code> ，执行带有新参数的 <code>fetchMore()</code></p>
+<p>新数据会依照合并策略写入缓存</p>
+<p><span class="emoji" alias="eyes" style="" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f440.png?v8">👀</span> 为了读取更新后的缓存，需要在 <code>then()</code> 中更新 <code>after</code> 的值（更新会触发查询执行，该 <code>after</code> 参数可以用于请求缓存中特定部分的数据</p>
+</li>
+<li><p>再次点击<u>加载更多分类</u></p>
+</li>
+</ol>
+<h3 id="刷新页面后"><a href="#刷新页面后" class="headerlink" title="刷新页面后"></a>刷新页面后</h3><ol>
+<li>页面加载</li>
+<li>点击<u>加载更多分类</u></li>
+<li>再次点击<u>加载更多分类</u></li>
+</ol>
+<h3 id="效果及问题"><a href="#效果及问题" class="headerlink" title="效果及问题"></a>效果及问题</h3><center style="display: flex; justify-content: space-between;">
+  <div><img src="/2021/12/09/%E5%88%86%E9%A1%B5/fetchMore-no-cache.gif" class="" width="375" title="没有缓存的情况下请求"></div>
+  <div style="margin-left: 10px;"><img src="/2021/12/09/%E5%88%86%E9%A1%B5/fetchMore-with-cache.gif" class="" width="375" title="有缓存的情况下请求"></div>
+</center>
+
+<p>看起来没什么问题！但是问题发生在<u>有缓存时的第一次点击</u>之后</p>
+<p>缓存中的分类如今有三条数据</p>
+<p>刷新页面，页面加载，ok！</p>
+<img src="/2021/12/09/%E5%88%86%E9%A1%B5/cache-ok.png" class="" width="500" title="ok！缓存不受影响！">
+
+<p>点击<u>加载更多分类</u>，ops！缓存中的分类变成两条了！！</p>
+<img src="/2021/12/09/%E5%88%86%E9%A1%B5/cache-ops.png" class="" width="500" title="ops！cache被修改了！">
+
+<h4 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h4><p>在有缓存的情况下，我的期望是<strong>从缓存读取数据</strong>。但是实际情况是，每次调用 <code>fetchMore()</code> 都会请求服务器数据。</p>
+<p>看了一下 <code>fetchMore()</code> 的<a href="https://github.com/apollographql/apollo-client/blob/main/src/core/ObservableQuery.ts">源码</a>，它是这么定义的</p>
+<img src="/2021/12/09/%E5%88%86%E9%A1%B5/fetchMore.png" class="" width="600" title="fetchMore() 必然请求服务器">
+
+<h4 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h4><ul>
+<li><input checked="" disabled="" type="checkbox"> 不用<code>fetchMore()</code></li>
+<li><input disabled="" type="checkbox"> 重新定义缓存合并策略，如果新结果已经被缓存，就不执行<code>merge()</code>函数（<code>...relayStylePagination()</code>中有默认的 <code>merge()</code>函数</li>
+</ul>
+<h2 id="使用-useQuery"><a href="#使用-useQuery" class="headerlink" title="使用 useQuery"></a>使用 useQuery</h2><p>为了不使用 <code>fetchMore()</code> ，刚开始我使用了 <code>useLazyQuery()</code>, 它会返回一个需要主动调用获取数据的 <code>load()</code> 函数。我在页面挂载后，调用 <code>load()</code> 获取第一页数据，在点击发生时再次调用 <code>load()</code> 并传入相应的参数，获取新数据。这种实现满足了一些需求，但是也有它的问题。于是我又去考虑别的策略，很快就意识到，相同的逻辑其实利用 <code>useQuery()</code> 也可以实现，尽管它们存在相同的问题。</p>
+<p>给查询传入响应式变量，想要获取下一页数据时，只需要<strong>更改变量的值</strong>（查询会自动更新</p>
+<h3 id="查询设置-1"><a href="#查询设置-1" class="headerlink" title="查询设置"></a>查询设置</h3><figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> after = <span class="title function_">ref</span>(<span class="string">''</span>) <span class="comment">// 从哪里开始获取数据</span></span><br><span class="line"><span class="keyword">const</span> first = <span class="title function_">ref</span>(<span class="number">1</span>) <span class="comment">// 获取几条数据</span></span><br><span class="line"><span class="keyword">const</span> {</span><br><span class="line">  <span class="attr">result</span>: categoryFeedResult,</span><br><span class="line">  <span class="attr">loading</span>: categoryFeedLoading,</span><br><span class="line">  <span class="attr">error</span>: categoryFeedError</span><br><span class="line">} = <span class="title function_">useQuery</span>(<span class="variable constant_">GET_CATEGORY_FEED</span>, <span class="function">() =&gt;</span> ({</span><br><span class="line">  <span class="attr">after</span>: after.<span class="property">value</span>,</span><br><span class="line">  <span class="attr">first</span>: first.<span class="property">value</span>,</span><br><span class="line">  <span class="attr">itemsAfter</span>: <span class="string">''</span>,</span><br><span class="line">  <span class="attr">itemsFirst</span>: <span class="number">3</span></span><br><span class="line">}))</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="首次使用-1"><a href="#首次使用-1" class="headerlink" title="首次使用"></a>首次使用</h3><ol>
+<li><p>页面加载</p>
+<p>请求第一条数据，缓存为空，于是请求服务器，获取第一条数据，写入缓存，返回到页面</p>
+</li>
+<li><p>点击加载更多分类</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loadMoreCategories = <span class="keyword">function</span> (<span class="params"></span>) {</span><br><span class="line">  after.<span class="property">value</span> = cursor.<span class="property">value</span> <span class="comment">// 只需要更新 after 的值</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>调用 <code>loadMoreCategories()</code></p>
+<p>查询再次执行，缓存未命中，请求服务器，得到第二条数据，写入缓存，返回到页面</p>
+</li>
+</ol>
+<h3 id="刷新页面"><a href="#刷新页面" class="headerlink" title="刷新页面"></a>刷新页面</h3><ol>
+<li><p>页面加载</p>
+<p><code>after</code> 参数为 <code>""</code></p>
+<p>请求第一条数据，缓存命中，返回到页面</p>
+</li>
+<li><p>点击加载更多分类</p>
+<p>调用 <code>loadMoreCategories()</code></p>
+<p>查询再次执行，命中缓存，得到两条数据，返回到页面</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自定义缓存的 read() 函数</span></span><br><span class="line">res.<span class="property">edges</span> = [</span><br><span class="line">  ...existing.<span class="property">edges</span>.<span class="title function_">slice</span>(<span class="number">0</span>, startIndex + first); <span class="comment">// 总是从头开始读取数据</span></span><br><span class="line">];</span><br></pre></td></tr></tbody></table></figure></li>
+</ol>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p><span class="emoji" alias="raised_eyebrow" style="" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f928.png?v8">🤨</span> 在没有缓存的情况下，请求新数据时，该组件会整体<strong>刷新</strong></p>
+<center style="display: flex; justify-content: space-evenly;">
+  <div><img src="/2021/12/09/%E5%88%86%E9%A1%B5/without-cache.gif" class="" width="375" title="没有缓存的情况下请求下一条数据"></div>
+  <div style="margin-left: 10px;"><img src="/2021/12/09/%E5%88%86%E9%A1%B5/with-cache.gif" class="" width="375" title="有缓存的情况下请求下一条数据"></div>
+</center>
+
+<p>因为 <code>categoryFeed</code> 查询确实是重新执行了一次，所以整体刷新是正常现象。这种正常现象不是我要的效果。</p>
+<h2 id="重新定义缓存合并策略"><a href="#重新定义缓存合并策略" class="headerlink" title="重新定义缓存合并策略"></a>重新定义缓存合并策略</h2><ul>
+<li><input disabled="" type="checkbox"> TODO</li>
+</ul>
+<h2 id="trade-off"><a href="#trade-off" class="headerlink" title="trade-off"></a>trade-off</h2><p><code>relayStylePagination()</code> 的默认设置中，对缓存的读取是全部读取。也就是说，当你从别的页面回到主页，你可以看到之前得到的所有数据，并没有分页地读取缓存数据。</p>
+<p>我也在想，在主页这样滚动浏览的情境下，<strong>分页读取</strong>到底有没有必要，想了半天，好像是没必要啊！</p>
+<h2 id="回到最初的起点"><a href="#回到最初的起点" class="headerlink" title="回到最初的起点"></a>回到最初的起点</h2><p>最终我还是决定采用使用 <code>fetchMore()</code> 的方法。虽然绕了一圈，但是这段时间为了解决分页问题不停探索，还是学到了很多东西。</p>
+<p><span class="emoji" alias="flags" style="" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f38f.png?v8">🎏</span> 写完<a href="https://duozhuavue.vercel.app/book">duozhuavue</a>就去面<a href="https://www.duozhuayu.com/">duozhuayu</a>！</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.apollographql.com/docs/react/pagination/overview/">Doc - apollo 分页</a></p>
+<p><a href="https://www.apollographql.com/docs/react/caching/advanced-topics/#incremental-loading-fetchmore">Doc - apollo 使用 <code>fetchMore</code> 增量加载</a></p>
+<p><a href="https://v4.apollo.vuejs.org/zh-cn/guide-composable/pagination.html#%E4%BD%BF%E7%94%A8-fetchmore">Doc - Vue Apollo 分页</a></p>
+<p><a href="https://www.apollographql.com/blog/graphql/pagination/understanding-pagination-rest-graphql-and-relay/">Blog - Understanding pagination</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/graphql/" rel="tag"># graphql</a>
+              <a href="/tags/apollo-client/" rel="tag"># apollo client</a>
+              <a href="/tags/vue-apollo/" rel="tag"># vue-apollo</a>
+              <a href="/tags/duozhuavue/" rel="tag"># duozhuavue</a>
+              <a href="/tags/pagination/" rel="tag"># pagination</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/01/09/%E6%96%87%E6%9C%AC%E6%BA%A2%E5%87%BA%E6%94%BB%E5%87%BB/" rel="prev" title="文本溢出攻击">
+                  <i class="fa fa-angle-left"></i> 文本溢出攻击
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/11/28/%E7%B2%98%E6%80%A7%E5%AE%9A%E4%BD%8D%E7%94%9F%E6%95%88%E6%97%B6%E6%B7%BB%E5%8A%A0%E6%A0%B7%E5%BC%8F/" rel="next" title="粘性定位生效时添加样式">
+                  粘性定位生效时添加样式 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">riki</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">37k</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
+</html>

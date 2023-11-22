@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icon.png">
+  <link rel="mask-icon" href="/icon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yikayiyo.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="摘要  义元是语义上的最小单位，单词的每一个含义通常都是很多义元组合而成的。为了让每个词义的义元更加确切，人们进行了手工标注，并构建了常识性的语言知识库。这篇文章指出，单词的义元信息可以改善词表示学习（一种将单词映射到低维语义空间的技术，是许多NLP任务的一个基本步骤）。关键点在于利用义元信息准确捕捉单词在特定语境下的确切含义。具体说来，作者拓展了skip-gram框架，提出了三种义元编码模型来">
+<meta property="og:type" content="article">
+<meta property="og:title" content="借助义元改善词表示学习">
+<meta property="og:url" content="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Misbehavior">
+<meta property="og:description" content="摘要  义元是语义上的最小单位，单词的每一个含义通常都是很多义元组合而成的。为了让每个词义的义元更加确切，人们进行了手工标注，并构建了常识性的语言知识库。这篇文章指出，单词的义元信息可以改善词表示学习（一种将单词映射到低维语义空间的技术，是许多NLP任务的一个基本步骤）。关键点在于利用义元信息准确捕捉单词在特定语境下的确切含义。具体说来，作者拓展了skip-gram框架，提出了三种义元编码模型来">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/HowNet.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/max.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/softmax.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/ssa.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/sacp.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/sac1.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/sac2.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/sac3.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/satp.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/sat.png">
+<meta property="article:published_time" content="2017-06-09T02:01:00.000Z">
+<meta property="article:modified_time" content="2023-11-22T10:18:22.752Z">
+<meta property="article:author" content="yikayiyo">
+<meta property="article:tag" content="word embedding">
+<meta property="article:tag" content="attention">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/HowNet.png">
+
+
+<link rel="canonical" href="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/","path":"2017/06/09/借助义元改善词表示学习/","title":"借助义元改善词表示学习"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>借助义元改善词表示学习 | Misbehavior</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="Misbehavior" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Misbehavior</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">相关工作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">系统方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sememes%EF%BC%8CSenses-and-Words-in-HowNet"><span class="nav-number">5.</span> <span class="nav-text">Sememes，Senses and Words in HowNet</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E8%A7%84skip-gram%E6%A8%A1%E5%9E%8B"><span class="nav-number">6.</span> <span class="nav-text">常规skip-gram模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SE-WRL-Model"><span class="nav-number">7.</span> <span class="nav-text">SE-WRL Model</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SSA"><span class="nav-number">7.1.</span> <span class="nav-text">SSA</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#SAC"><span class="nav-number">7.2.</span> <span class="nav-text">SAC</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#SAT"><span class="nav-number">7.3.</span> <span class="nav-text">SAT</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E5%B1%95%E6%9C%9B-%E6%88%91%E7%9A%84-0"><span class="nav-number">8.</span> <span class="nav-text">总结展望(我的-0-)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E7%AB%A0"><span class="nav-number">9.</span> <span class="nav-text">文章</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yikayiyo"
+      src="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+  <p class="site-author-name" itemprop="name">yikayiyo</p>
+  <div class="site-description" itemprop="description">浪漫在哪里</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yikayiyo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yikayiyo" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+      <meta itemprop="name" content="yikayiyo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Misbehavior">
+      <meta itemprop="description" content="浪漫在哪里">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="借助义元改善词表示学习 | Misbehavior">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          借助义元改善词表示学习
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-06-09 10:01:00" itemprop="dateCreated datePublished" datetime="2017-06-09T10:01:00+08:00">2017-06-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><img src="/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/HowNet.png" class="" title="HowNet中的一个例子">
+<h4 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h4><p>  义元是语义上的最小单位，单词的每一个含义通常都是很多义元组合而成的。为了让每个词义的义元更加确切，人们进行了手工标注，并构建了常识性的语言知识库。这篇文章指出，单词的义元信息可以改善词表示学习（一种将单词映射到低维语义空间的技术，是许多NLP任务的一个基本步骤）。关键点在于利用义元信息准确捕捉单词在特定语境下的确切含义。具体说来，作者拓展了skip-gram框架，提出了三种义元编码模型来学习sememes-senses-words的表示，<span id="more"></span>而且在不同的语境中确定词义时用到了注意力机制。为了检验学到的词表示的质量，进行了两个实验，包括相似度计算和单词类推，结果新模型的效果显著好于设置的基础模型。这也说明了作者的模型可以对义元信息正确建模，通过注意力机制使义元作用于词表示学习。</p>
+<h4 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h4><p>  义元是最小的语义单元，现有概念（比如某个词的词义）都可以通过一个有限集合内的义元组合而来。问题在于，某个词的义元并不明确，于是人们人工构建了一个常识性的语言知识库。<br>HowNet就是这样的一个知识库，里面的每一个概念都用和它相关的一个或多个义元进行了标注。与WordNet不同，HowNet强调由义元表示的part和attribute的意义，在单词相似度计算、语义分析方面被广泛使用。<br>  作者的目标在于将义元信息纳入词表示学习，从而得到改进的词嵌入。WRL是许多NLP任务，包括语言建模、神经机器翻译，基本的、非常重要的步骤。<br>  关于词表示的研究已经有很多，其中word2vec实现了效率和有效性非常不错的平衡。在word2vec中，一个词对应一个词嵌入，忽略了词的多义。(Huang et al，2012)提出一种处理WRL的多原型模型，根据上下文聚类进行无监督的词义归纳和词嵌入。(Chen et al,2014)进一步利用WordNet同义词集指导词表示学习。<br>  从上得出结论：词义消歧在词表示学习中非常关键。作者认为每个单词下的义元标注可以带来必需的语义上的调整。为探讨其可行性，提出了SE-WRL模型，该模型可以在检测词义的同时，学习词表示。具体说来，这个框架把每个单词的词义看作是义元的组合，根据上下文迭代地进行词义消歧，通过拓展skip-gram模型学习sememes-senses-words的表示。该框架提出一种基于注意力的方法来自动根据上下文选择近似的词义。<br>实验中用两个任务评估模型，包括词语相似度和词语类比，最后举几个例子。结果表明该模型结果显著好于其它模型，尤其在单词类比方面。这说明该模型在义元信息的帮助下可以构建更好的知识表示，在词义消歧方面还有潜力。<br>本文贡献总结如下：</p>
+<ol>
+<li>第一个利用知网义元改善词表示学习的工作（as far as）</li>
+<li>借助知网的义元信息，根据上下文，成功利用注意力机制检测词义、学习词表示</li>
+<li>大量实验证明有效性</li>
+</ol>
+<h4 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h4><p>  词表示<br>  词义消歧和表示学习</p>
+<h4 id="系统方法"><a href="#系统方法" class="headerlink" title="系统方法"></a>系统方法</h4><p>  本节介绍SE-WRL框架。具体来说，我们在经过语义正则化的大型语料库上学习模型，得到义元、词义、词嵌入。<br>下面首先介绍知网、词语结构。接着介绍常规的WRL模型skip-gram。最后详细介绍三种义元编码模型。</p>
+<h4 id="Sememes，Senses-and-Words-in-HowNet"><a href="#Sememes，Senses-and-Words-in-HowNet" class="headerlink" title="Sememes，Senses and Words in HowNet"></a>Sememes，Senses and Words in HowNet</h4><p>  知网中标注了每个词的精确词义，对于每一个词义，其重要的部分、属性都以义元的形式给出。<br>  义元之间形成了复杂的层次结构，本文没有考虑这种结构，把义元视为一个集合。<br>  约束：W-S-X  （word-sense-sememe）C(w):上下文集合</p>
+<h4 id="常规skip-gram模型"><a href="#常规skip-gram模型" class="headerlink" title="常规skip-gram模型"></a>常规skip-gram模型</h4><p>  该模型认为词嵌入应该和其上下文词语相关；<br>  给定目标词，最大限度地提高上下文词语的预测概率；<br>  利用一个滑动窗口选择上下文词语；<br>  对于词序列H={w1,…,wn}，skip-gram模型的目的是最大化：</p>
+<img src="/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/max.png" class="">
+
+<p>  经softmax归一化：</p>
+<img src="/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/softmax.png" class="">
+
+<h4 id="SE-WRL-Model"><a href="#SE-WRL-Model" class="headerlink" title="SE-WRL Model"></a>SE-WRL Model</h4><h5 id="SSA"><a href="#SSA" class="headerlink" title="SSA"></a>SSA</h5><p>  简单聚合模型。一个词嵌入，由组成它的义元向量取均值得到。m为词语w的义元总数。</p>
+<img src="/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/ssa.png" class="">
+
+<p>  包含相同义元的相似词语可能会最终形成相似的表示。</p>
+<h5 id="SAC"><a href="#SAC" class="headerlink" title="SAC"></a>SAC</h5><p>  SSA模型不足：每一个词只有一个表示<br>  利用attention机制，自动根据目标词为上下文词选择合适的词义；通过对上下文词消歧，来学到更好的目标词表示。<br>  <img src="/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/sacp.png" class=""><br>  目标词（as an attention）：original word embedding<br>  上下文词：sememe embeddings，公式为：</p>
+<img src="/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/sac1.png" class="">
+
+<p>  意思是：每个sense embedding*attention score，然后求和.</p>
+<img src="/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/sac2.png" class="">
+
+<p>  每一个sense由组成它的sememe embeddings取均值得到：</p>
+<img src="/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/sac3.png" class="">
+
+<p>  attention机制认为，上下文词的sense embedding和目标词w越相关，在构建上下文词的word embedding时这个sense就越该被考虑。这种机制下，上下文中的每个词都表示成了其sense的特定分布。</p>
+<h5 id="SAT"><a href="#SAT" class="headerlink" title="SAT"></a>SAT</h5><p>  和SAC相反，SAT将很多的上下文词视为attention，来选择目标词的词义。<br>  <img src="/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/satp.png" class=""><br>  上下文词（as an attention）：original word embeddings<br>  目标词：sememe embedding，公式：</p>
+<img src="/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/sat.png" class="">
+
+<p>  直觉上，SAT效果应该好于SAC。</p>
+<h4 id="总结展望-我的-0"><a href="#总结展望-我的-0" class="headerlink" title="总结展望(我的-0-)"></a>总结展望(我的-0-)</h4><p>  文章提出一个模型,该模型可以对义元信息较好地建模,改善了词表示.在词语类推和相似度计算中,相比传统模型该模型都展示出了优势.<br>  在处理义元时忽略掉了其复杂的层次结构,并且只对中文进行处理.可以想象的是,如果对层次结构有较好的建模,词表示会更加精确,其表示的学习过程也会更加容易收敛.另外,这种机制应该适用于其它语言,值得尝试.</p>
+<h4 id="文章"><a href="#文章" class="headerlink" title="文章"></a>文章</h4><p><a href="http://nlp.csai.tsinghua.edu.cn/~lzy/publications/acl2017_sememe.pdf">Improved Word Representation Learning with Sememes</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/word-embedding/" rel="tag"># word embedding</a>
+              <a href="/tags/attention/" rel="tag"># attention</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/06/12/%E5%86%B3%E7%AD%96%E6%A0%91/" rel="prev" title="决策树">
+                  <i class="fa fa-angle-left"></i> 决策树
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/06/05/%E7%AE%80%E6%B4%81%E7%9A%84python/" rel="next" title="简洁的python">
+                  简洁的python <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">riki</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">37k</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icon.png">
+  <link rel="mask-icon" href="/icon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yikayiyo.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="https:&#x2F;&#x2F;developer.yahoo.com&#x2F;performance&#x2F;rules.html?guccounter&#x3D;1#csslink  Content Server Cookie CSS JavaScript Images Mobile  原文从七个方面总结网站性能提升。 本篇总结Content方面。 Make Fewer HTTP Requests 减少HTTP请求减少页面的组件数量，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网站性能提升最佳实践一">
+<meta property="og:url" content="https://yikayiyo.github.io/2020/06/22/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%B8%80/index.html">
+<meta property="og:site_name" content="Misbehavior">
+<meta property="og:description" content="https:&#x2F;&#x2F;developer.yahoo.com&#x2F;performance&#x2F;rules.html?guccounter&#x3D;1#csslink  Content Server Cookie CSS JavaScript Images Mobile  原文从七个方面总结网站性能提升。 本篇总结Content方面。 Make Fewer HTTP Requests 减少HTTP请求减少页面的组件数量，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-06-22T14:51:53.000Z">
+<meta property="article:modified_time" content="2023-11-22T10:18:22.937Z">
+<meta property="article:author" content="yikayiyo">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="翻译">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://yikayiyo.github.io/2020/06/22/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%B8%80/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yikayiyo.github.io/2020/06/22/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%B8%80/","path":"2020/06/22/网站性能提升最佳实践一/","title":"网站性能提升最佳实践一"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>网站性能提升最佳实践一 | Misbehavior</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="Misbehavior" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Misbehavior</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Make-Fewer-HTTP-Requests-%E5%87%8F%E5%B0%91HTTP%E8%AF%B7%E6%B1%82"><span class="nav-number">1.</span> <span class="nav-text">Make Fewer HTTP Requests 减少HTTP请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reduce-DNS-Lookups-%E5%87%8F%E5%B0%91DNS%E6%9F%A5%E8%AF%A2"><span class="nav-number">2.</span> <span class="nav-text">Reduce DNS Lookups 减少DNS查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Avoid-Redirects-%E9%81%BF%E5%85%8D%E7%BD%91%E7%AB%99%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-number">3.</span> <span class="nav-text">Avoid Redirects 避免网站重定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Make-Ajax-Cacheable-%E7%BC%93%E5%AD%98Ajax%E8%AF%B7%E6%B1%82"><span class="nav-number">4.</span> <span class="nav-text">Make Ajax Cacheable 缓存Ajax请求</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%95%E6%97%B6%E4%BD%BF%E7%94%A8%E6%97%A7%E7%9A%84%E5%93%8D%E5%BA%94%EF%BC%8C%E4%BD%95%E6%97%B6%E5%8F%91%E9%80%81%E6%96%B0%E7%9A%84%E8%AF%B7%E6%B1%82%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">何时使用旧的响应，何时发送新的请求？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Postload-Components"><span class="nav-number">5.</span> <span class="nav-text">Postload Components</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Preload-Components"><span class="nav-number">6.</span> <span class="nav-text">Preload Components</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reduce-the-Number-of-DOM-Elements"><span class="nav-number">7.</span> <span class="nav-text">Reduce the Number of DOM Elements</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%89%E5%A4%9A%E5%B0%91%E4%B8%AADOM%E5%85%83%E7%B4%A0%E6%89%8D%E7%AE%97%E5%A4%9A%E5%91%A2%EF%BC%9F"><span class="nav-number">7.1.</span> <span class="nav-text">有多少个DOM元素才算多呢？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Split-Components-Across-Domains"><span class="nav-number">8.</span> <span class="nav-text">Split Components Across Domains</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Minimize-Number-of-iframes"><span class="nav-number">9.</span> <span class="nav-text">Minimize Number of iframes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Avoid-404s"><span class="nav-number">10.</span> <span class="nav-text">Avoid 404s</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yikayiyo"
+      src="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+  <p class="site-author-name" itemprop="name">yikayiyo</p>
+  <div class="site-description" itemprop="description">浪漫在哪里</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yikayiyo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yikayiyo" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2020/06/22/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%B8%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+      <meta itemprop="name" content="yikayiyo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Misbehavior">
+      <meta itemprop="description" content="浪漫在哪里">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="网站性能提升最佳实践一 | Misbehavior">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          网站性能提升最佳实践一
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-06-22 22:51:53" itemprop="dateCreated datePublished" datetime="2020-06-22T22:51:53+08:00">2020-06-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>972</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a href="https://developer.yahoo.com/performance/rules.html?guccounter=1#csslink">https://developer.yahoo.com/performance/rules.html?guccounter=1#csslink</a></p>
+<ul>
+<li>Content</li>
+<li>Server</li>
+<li>Cookie</li>
+<li>CSS</li>
+<li>JavaScript</li>
+<li>Images</li>
+<li>Mobile</li>
+</ul>
+<p>原文从七个方面总结网站性能提升。</p>
+<p>本篇总结Content方面。</p>
+<h3 id="Make-Fewer-HTTP-Requests-减少HTTP请求"><a href="#Make-Fewer-HTTP-Requests-减少HTTP请求" class="headerlink" title="Make Fewer HTTP Requests 减少HTTP请求"></a><a href="https://developer.yahoo.com/performance/rules.html#num_http">Make Fewer HTTP Requests</a> 减少HTTP请求</h3><p>减少页面的组件数量，可以减少HTTP请求数量。</p>
+<p>减少页面组件的方法：</p>
+<ul>
+<li><p>精简页面设计</p>
+</li>
+<li><p>不简化设计的情况下：</p>
+<ul>
+<li>文件组合（js文件放到一个里面，css文件放到一个里面）</li>
+</ul>
+</li>
+<li><p><a href="https://css-tricks.com/css-sprites/">CSS Sprites</a>：背景图片合并成一张，利用css属性设置各个部分到相对应的页面</p>
+<ul>
+<li><a href="https://css-tricks.com/examples/CSSClip/">CSS Sprites with Inline Images</a> 也可以用来处理图片</li>
+</ul>
+</li>
+<li><p>将内联图片放到css文件中（ Combining inline images into your cached stylesheets is a way to reduce HTTP requests and avoid increasing the size of your pages ？How ? ( Todo: find demo</p>
+</li>
+</ul>
+<h3 id="Reduce-DNS-Lookups-减少DNS查询"><a href="#Reduce-DNS-Lookups-减少DNS查询" class="headerlink" title="Reduce DNS Lookups 减少DNS查询"></a><a href="https://developer.yahoo.com/performance/rules.html#dns_lookups">Reduce DNS Lookups</a> 减少DNS查询</h3><p>减少网站的主机名（hostnames），可以减少DNS查询次数</p>
+<p>但是减少网站主机名会减少页面的并发下载量</p>
+<blockquote>
+<p>Trade-off：Avoiding DNS lookups cuts response times, but reducing parallel downloads may increase response times. </p>
+</blockquote>
+<p> Guide：Split components across <strong>at least two but no more than four</strong> hostnames.</p>
+<h3 id="Avoid-Redirects-避免网站重定向"><a href="#Avoid-Redirects-避免网站重定向" class="headerlink" title="Avoid Redirects 避免网站重定向"></a><a href="https://developer.yahoo.com/performance/rules.html#redirects">Avoid Redirects</a> 避免网站重定向</h3><p>最经常发生的重定向：应该加/的地方没有加/</p>
+<p>重定向可以用来从旧网站跳转到新网站</p>
+<p>重定向也可以用来连接网站的不同部分、根据特定情况让用户跳转</p>
+<p>解决办法：</p>
+<ul>
+<li><p>如果两个网站在同一个服务器，使用 <code>Alias and mod_rewrite</code></p>
+</li>
+<li><p>如果是网站换了个新域名，创建一个CNAME (a DNS record that creates an alias pointing from one domain name to another)，结合<code>Alias or mod_rewrite</code></p>
+</li>
+</ul>
+<h3 id="Make-Ajax-Cacheable-缓存Ajax请求"><a href="#Make-Ajax-Cacheable-缓存Ajax请求" class="headerlink" title="Make Ajax Cacheable 缓存Ajax请求"></a><a href="https://developer.yahoo.com/performance/rules.html#cacheajax">Make Ajax Cacheable</a> 缓存Ajax请求</h3><p><strong>异步不等于即时</strong></p>
+<p>优化异步请求：</p>
+<ul>
+<li>缓存Ajax请求</li>
+</ul>
+<span id="more"></span>
+
+<h4 id="何时使用旧的响应，何时发送新的请求？"><a href="#何时使用旧的响应，何时发送新的请求？" class="headerlink" title="何时使用旧的响应，何时发送新的请求？"></a>何时使用旧的响应，何时发送新的请求？</h4><blockquote>
+<p>This could be done by adding a timestamp to the address book Ajax URL indicating the last time the user modified her address book, for example, &amp;t=1190241612. If the address book hasn’t been modified since the last download, the timestamp will be the same and the address book will be read from the browser’s cache eliminating an extra HTTP roundtrip. If the user has modified her address book, the timestamp ensures the new URL doesn’t match the cached response, and the browser will request the updated address book entries.</p>
+</blockquote>
+<h3 id="Postload-Components"><a href="#Postload-Components" class="headerlink" title="Postload Components"></a><a href="https://developer.yahoo.com/performance/rules.html#postload">Postload Components</a></h3><p>非必须的组件延迟加载，比如一些js代码、用户点击后才显示的内容、文件夹里面的图片</p>
+<p>确保页面正常工作，然后通过一些延迟加载的脚本增强页面上的体验，比如动画、拖放</p>
+<h3 id="Preload-Components"><a href="#Preload-Components" class="headerlink" title="Preload Components"></a><a href="https://developer.yahoo.com/performance/rules.html#preload">Preload Components</a></h3><p>利用计算机的闲置时间，预加载将来需要的内容</p>
+<ol>
+<li><p>无条件的</p>
+<p>只要打开某网站就加载一些额外的组件。</p>
+<p>打开google.com，总会预加载之后搜索界面的图片</p>
+</li>
+<li><p>有条件的</p>
+<p>搜索框输入内容就会预加载内容</p>
+</li>
+<li><p>预期中的</p>
+<p>上线网站新设计时预加载可以不影响用户体验</p>
+</li>
+</ol>
+<h3 id="Reduce-the-Number-of-DOM-Elements"><a href="#Reduce-the-Number-of-DOM-Elements" class="headerlink" title="Reduce the Number of DOM Elements"></a><a href="https://developer.yahoo.com/performance/rules.html#min_dom">Reduce the Number of DOM Elements</a></h3><p>页面tag数量</p>
+<figure class="highlight js"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">getElementsByTagName</span>(<span class="string">'*'</span>).<span class="property">length</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>只有在语义上有意义时，才使用<code>&lt;div&gt;</code>（ 因为它总会添加一行</p>
+<h4 id="有多少个DOM元素才算多呢？"><a href="#有多少个DOM元素才算多呢？" class="headerlink" title="有多少个DOM元素才算多呢？"></a>有多少个DOM元素才算多呢？</h4><p>检查其他类似的页面，然后比较。</p>
+<h3 id="Split-Components-Across-Domains"><a href="#Split-Components-Across-Domains" class="headerlink" title="Split Components Across Domains"></a><a href="https://developer.yahoo.com/performance/rules.html#split">Split Components Across Domains</a></h3><p>拆分组件可以最大限度地实现并行下载</p>
+<p>确保使用的域名数量不超过2-4个，因为DNS查询惩罚</p>
+<p>例子：</p>
+<p>将HTML文件和动态内容托管在<a href="http://www.example.org,并在static1.example.org和static2.example.org上拆分部署静态组件/">www.example.org，并在static1.example.org和static2.example.org上拆分部署静态组件</a></p>
+<h3 id="Minimize-Number-of-iframes"><a href="#Minimize-Number-of-iframes" class="headerlink" title="Minimize Number of iframes"></a><a href="https://developer.yahoo.com/performance/rules.html#iframes">Minimize Number of iframes</a></h3><p><code>&lt;iframe&gt;</code> 优点：</p>
+<ul>
+<li>Helps with slow third-party content like badges and ads</li>
+<li>Security sandbox</li>
+<li>Download scripts in parallel</li>
+</ul>
+<p><code>&lt;iframe&gt;</code> 缺点：</p>
+<ul>
+<li>Costly even if blank</li>
+<li>Blocks page onload</li>
+<li>Non-semantic</li>
+</ul>
+<h3 id="Avoid-404s"><a href="#Avoid-404s" class="headerlink" title="Avoid 404s"></a><a href="https://developer.yahoo.com/performance/rules.html#no404">Avoid 404s</a></h3><p>HTTP请求是很昂贵的，提出HTTP请求，得到一个无用的响应（即404 Not Found）是完全没有必要的，而且会拖慢用户体验，没有任何好处。</p>
+<p><strong>Particularly bad</strong> is when the link to an external JavaScript is wrong and the result is a 404. First, this download will block parallel downloads. Next the browser may try to parse the 404 response body as if it were JavaScript code, trying to find something usable in it.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+              <a href="/tags/%E7%BF%BB%E8%AF%91/" rel="tag"># 翻译</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/06/29/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%BA%8C/" rel="prev" title="网站性能提升最佳实践二">
+                  <i class="fa fa-angle-left"></i> 网站性能提升最佳实践二
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/06/18/surface%E6%B5%8B%E8%AF%95/" rel="next" title="surface测试">
+                  surface测试 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">riki</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">37k</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
+</html>

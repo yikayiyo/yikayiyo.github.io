@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icon.png">
+  <link rel="mask-icon" href="/icon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yikayiyo.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Jumping Right In FROM指定的数据集会被调用SPARQL处理器时指定的数据集覆盖（如果都指定了 RDF不是数据格式，而是数据模型，它可以选择存储数据文件的语法 如果我们将数据与其它数据结合起来，那么RDF三元组的主语和谓语都必须属于特定的名称空间，以防止类似名称之间的混淆，于是我们使用URI来表示它们 当使用完整的URI时，将其放在尖括号中以向处理器显示它是一个URI 在sema">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sparql 笔记">
+<meta property="og:url" content="https://yikayiyo.github.io/2018/03/26/sparql/index.html">
+<meta property="og:site_name" content="Misbehavior">
+<meta property="og:description" content="Jumping Right In FROM指定的数据集会被调用SPARQL处理器时指定的数据集覆盖（如果都指定了 RDF不是数据格式，而是数据模型，它可以选择存储数据文件的语法 如果我们将数据与其它数据结合起来，那么RDF三元组的主语和谓语都必须属于特定的名称空间，以防止类似名称之间的混淆，于是我们使用URI来表示它们 当使用完整的URI时，将其放在尖括号中以向处理器显示它是一个URI 在sema">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-03-26T10:53:29.000Z">
+<meta property="article:modified_time" content="2023-11-22T10:18:22.747Z">
+<meta property="article:author" content="yikayiyo">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://yikayiyo.github.io/2018/03/26/sparql/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yikayiyo.github.io/2018/03/26/sparql/","path":"2018/03/26/sparql/","title":"sparql 笔记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>sparql 笔记 | Misbehavior</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="Misbehavior" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Misbehavior</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Jumping-Right-In"><span class="nav-number">1.</span> <span class="nav-text">Jumping Right In</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Semantic-Web-RDF-and-Linked-Data-and-SPARQL"><span class="nav-number">2.</span> <span class="nav-text">The Semantic Web,RDF,and Linked Data(and SPARQL)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SPARQL-Queries"><span class="nav-number">3.</span> <span class="nav-text">SPARQL Queries</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#More-Readable-Query-Results"><span class="nav-number">3.1.</span> <span class="nav-text">More Readable Query Results</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Data-That-Might-Not-Be-There"><span class="nav-number">3.2.</span> <span class="nav-text">Data That Might Not Be There</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Finding-Data-That-Doesn%E2%80%99t-Meet-Certain-Conditions"><span class="nav-number">3.3.</span> <span class="nav-text">Finding Data That Doesn’t Meet Certain Conditions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Serching-Futher-In-The-Data"><span class="nav-number">3.4.</span> <span class="nav-text">Serching Futher In The Data</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Searching-With-Blank-Nodes"><span class="nav-number">3.5.</span> <span class="nav-text">Searching With Blank Nodes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Eliminating-Redundant-Output"><span class="nav-number">3.6.</span> <span class="nav-text">Eliminating Redundant Output</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Combining-Different-Search-Conditions"><span class="nav-number">3.7.</span> <span class="nav-text">Combining Different Search Conditions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Filtering-Data-Based-On-Conditions"><span class="nav-number">3.8.</span> <span class="nav-text">Filtering Data Based On Conditions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Retrieving-A-Specific-Number-Of-Results"><span class="nav-number">3.9.</span> <span class="nav-text">Retrieving A Specific Number Of Results</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Querying-Named-Graphs"><span class="nav-number">3.10.</span> <span class="nav-text">Querying Named Graphs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Queries-In-Your-Queries"><span class="nav-number">3.11.</span> <span class="nav-text">Queries In Your Queries</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Combining-Values-And-Assigning-Values-To-Variables"><span class="nav-number">3.12.</span> <span class="nav-text">Combining Values And Assigning Values To Variables</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sorting-Aggregating-Finding-The-Biggest-And-Smallest-And%E2%80%A6"><span class="nav-number">3.13.</span> <span class="nav-text">Sorting, Aggregating, Finding The Biggest And Smallest And…</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Query-A-Remote-SPARQL-Service"><span class="nav-number">3.14.</span> <span class="nav-text">Query A Remote SPARQL Service</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Federated-Queries-Searching-Multiple-Datasets-With-One-Query"><span class="nav-number">3.15.</span> <span class="nav-text">Federated Queries:Searching Multiple Datasets With One Query</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Coping-Creating-And-Converting-Data"><span class="nav-number">4.</span> <span class="nav-text">Coping,Creating,And Converting Data</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Query-Forms-SELECT-DESCRIBE-ASK-and-CONSTRUCT"><span class="nav-number">4.1.</span> <span class="nav-text">Query Forms: SELECT, DESCRIBE, ASK, and CONSTRUCT</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Copying-Data"><span class="nav-number">4.2.</span> <span class="nav-text">Copying Data</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Creating-New-Data"><span class="nav-number">4.3.</span> <span class="nav-text">Creating New Data</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Converting-Data"><span class="nav-number">4.4.</span> <span class="nav-text">Converting Data</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Finding-Bad-Data"><span class="nav-number">4.5.</span> <span class="nav-text">Finding Bad Data</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Defining-Rules-with-SPARQL"><span class="nav-number">4.6.</span> <span class="nav-text">Defining Rules with SPARQL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Generating-Data-About-Broken-Rules"><span class="nav-number">4.7.</span> <span class="nav-text">Generating Data About Broken Rules</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Using-Existing-SPARQL-Rules-Vocabularies"><span class="nav-number">4.8.</span> <span class="nav-text">Using Existing SPARQL Rules Vocabularies</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Asking-for-a-Description-of-a-Resource"><span class="nav-number">4.9.</span> <span class="nav-text">Asking for a Description of a Resource</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Datatypes-And-Functions"><span class="nav-number">5.</span> <span class="nav-text">Datatypes And Functions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Datatypes-and-Queries"><span class="nav-number">5.1.</span> <span class="nav-text">Datatypes and Queries</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Representing-Strings"><span class="nav-number">5.2.</span> <span class="nav-text">Representing Strings</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Comparing-Values-and-Doing-Arithmetic"><span class="nav-number">5.3.</span> <span class="nav-text">Comparing Values and Doing Arithmetic</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Functions"><span class="nav-number">5.4.</span> <span class="nav-text">Functions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Program-Logic-Functions"><span class="nav-number">5.5.</span> <span class="nav-text">Program Logic Functions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Node-Type-and-Datatype-Checking-Functions"><span class="nav-number">5.6.</span> <span class="nav-text">Node Type and Datatype Checking Functions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Node-Type-Conversion-Functions"><span class="nav-number">5.7.</span> <span class="nav-text">Node Type Conversion Functions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Datatype-Conversion"><span class="nav-number">5.8.</span> <span class="nav-text">Datatype Conversion</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Checking-Adding-and-Removing-Spoken-Language-Tags"><span class="nav-number">5.9.</span> <span class="nav-text">Checking, Adding, and Removing Spoken Language Tags</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#String-Functions"><span class="nav-number">5.10.</span> <span class="nav-text">String Functions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Numeric-Functions"><span class="nav-number">5.11.</span> <span class="nav-text">Numeric Functions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Date-and-Time-Functions"><span class="nav-number">5.12.</span> <span class="nav-text">Date and Time Functions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hash-Functions"><span class="nav-number">5.13.</span> <span class="nav-text">Hash Functions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Extension-Functions"><span class="nav-number">5.14.</span> <span class="nav-text">Extension Functions</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Updating-Data-With-SPARQL"><span class="nav-number">6.</span> <span class="nav-text">Updating Data With SPARQL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Getting-Started-with-Fuseki"><span class="nav-number">6.1.</span> <span class="nav-text">Getting Started with Fuseki</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Adding-Data-to-a-Dataset"><span class="nav-number">6.2.</span> <span class="nav-text">Adding Data to a Dataset</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Deleting-Data"><span class="nav-number">6.3.</span> <span class="nav-text">Deleting Data</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Changing-Existing-Data"><span class="nav-number">6.4.</span> <span class="nav-text">Changing Existing Data</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Named-Graphs"><span class="nav-number">6.5.</span> <span class="nav-text">Named Graphs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dropping-Graphs"><span class="nav-number">6.6.</span> <span class="nav-text">Dropping Graphs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Named-Graph-Syntax-Shortcuts-WITH-and-USING"><span class="nav-number">6.7.</span> <span class="nav-text">Named Graph Syntax Shortcuts: WITH and USING</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Deleting-and-Replacing-Triples-in-Named-Graphs"><span class="nav-number">6.8.</span> <span class="nav-text">Deleting and Replacing Triples in Named Graphs</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Building-Applications-With-SPARQL"><span class="nav-number">7.</span> <span class="nav-text">Building Applications With SPARQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Glossary"><span class="nav-number">8.</span> <span class="nav-text">Glossary</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yikayiyo"
+      src="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+  <p class="site-author-name" itemprop="name">yikayiyo</p>
+  <div class="site-description" itemprop="description">浪漫在哪里</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yikayiyo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yikayiyo" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2018/03/26/sparql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+      <meta itemprop="name" content="yikayiyo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Misbehavior">
+      <meta itemprop="description" content="浪漫在哪里">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="sparql 笔记 | Misbehavior">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          sparql 笔记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-03-26 18:53:29" itemprop="dateCreated datePublished" datetime="2018-03-26T18:53:29+08:00">2018-03-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>16 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="Jumping-Right-In"><a href="#Jumping-Right-In" class="headerlink" title="Jumping Right In"></a>Jumping Right In</h3><ul>
+<li>FROM指定的数据集会被调用SPARQL处理器时指定的数据集覆盖（如果都指定了</li>
+<li>RDF不是数据格式，而是数据模型，它可以选择存储数据文件的语法</li>
+<li>如果我们将数据与其它数据结合起来，那么RDF三元组的主语和谓语都必须属于特定的名称空间，以防止类似名称之间的混淆，于是我们使用URI来表示它们</li>
+<li>当使用完整的URI时，将其放在尖括号中以向处理器显示它是一个URI</li>
+<li>在semantic web开发中，词汇表是一组使用标准格式存储的术语，供人们重复使用</li>
+<li>发现不同来源三元组之间联系的能力是SPARQL的最佳特性之一</li>
+<li>约定：主谓宾分别用?s,?p,?o表示</li>
+<li>只有满足图模式中所有三元组的数据才会被返回<span id="more"></span></li>
+</ul>
+<h3 id="The-Semantic-Web-RDF-and-Linked-Data-and-SPARQL"><a href="#The-Semantic-Web-RDF-and-Linked-Data-and-SPARQL" class="headerlink" title="The Semantic Web,RDF,and Linked Data(and SPARQL)"></a>The Semantic Web,RDF,and Linked Data(and SPARQL)</h3><ul>
+<li>the semantic web isn’t about the query language or about the model—it’s about the data</li>
+<li>RDF中基本的信息单元是三元组</li>
+<li>将RDF作为一串字节保存在磁盘上的技术术语是序列化</li>
+<li>RDFS gives people a way to describe vocabularies. It is itself a vocabulary with a schema whose triples declare facts.</li>
+<li>Linked Data：<ul>
+<li>Use URIs as names for things.</li>
+<li>Use HTTP URIs so that people can look up those names.</li>
+<li>When someone looks up a URI, provide useful information, using the standards (RDF*, SPARQL).</li>
+<li>Include links to other URIs so that they can discover more things.</li>
+</ul>
+</li>
+</ul>
+<h3 id="SPARQL-Queries"><a href="#SPARQL-Queries" class="headerlink" title="SPARQL Queries"></a>SPARQL Queries</h3><p>介绍SPARQL查询语言更多更有用的特征</p>
+<h4 id="More-Readable-Query-Results"><a href="#More-Readable-Query-Results" class="headerlink" title="More Readable Query Results"></a>More Readable Query Results</h4><ul>
+<li><strong>分号</strong>表示接下来的谓语-宾语对与之前的共有一个主语  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ?<span class="keyword">first</span> ?<span class="keyword">last</span></span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{</span><br><span class="line">  ?person ab:firstName ?<span class="keyword">first</span>;</span><br><span class="line">          ab:lastName  ?last.</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<li>使用那些可读性强的属性，比如标签、描述等等（字符串，而不是URI</li>
+<li><strong>rdfs:label</strong> 是第一个应该注意的属性，别的，<strong>rdfs:comment</strong>,<strong>skos:prefLabel</strong>（首选标签）,<strong>skos:altLabel</strong>（备选标签）</li>
+<li>给定的资源并不总必须是主语、谓语或者宾语，在不同的三元组中它可以是不同的（多个）角色</li>
+</ul>
+<h4 id="Data-That-Might-Not-Be-There"><a href="#Data-That-Might-Not-Be-There" class="headerlink" title="Data That Might Not Be There"></a>Data That Might Not Be There</h4><ul>
+<li>将triple pattern放入到OPTIONAL graph patterns中，表示“如果有的话，检索该值”</li>
+<li>OPTIONAL{t1.t2.t3}包含三个三元组，这些三元组需要同时满足</li>
+<li>OPTIONAL{t1} OPTIONAL{t2} OPTIONAL{t3}则是三个独立的条件</li>
+<li>OPTIONAL graph patterns的顺序很重要  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 优先使用nick作为?<span class="keyword">first</span></span><br><span class="line"><span class="keyword">SELECT</span> ?<span class="keyword">first</span> ?<span class="keyword">last</span></span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{</span><br><span class="line">    ?s ab:lastName ?last.</span><br><span class="line">    OPTIONAL {?s ab:nick ?<span class="keyword">first</span>}</span><br><span class="line">    OPTIONAL {?s ab:firstName ?<span class="keyword">first</span>}</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h4 id="Finding-Data-That-Doesn’t-Meet-Certain-Conditions"><a href="#Finding-Data-That-Doesn’t-Meet-Certain-Conditions" class="headerlink" title="Finding Data That Doesn’t Meet Certain Conditions"></a>Finding Data That Doesn’t Meet Certain Conditions</h4><ul>
+<li>SPARQL1.0  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 利用<span class="keyword">FILTER</span>和bound，?v没有绑定值时返回<span class="literal">true</span>，然后输出</span><br><span class="line">OPTIONAL {?s ?p ?v}</span><br><span class="line"><span class="keyword">FILTER</span>(<span class="operator">!</span>bound(?v))</span><br></pre></td></tr></tbody></table></figure></li>
+<li>SPARQL1.1  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 当指定的<span class="keyword">pattern</span>不存在时返回ture</span><br><span class="line"><span class="keyword">NOT</span> <span class="keyword">EXISTS</span> {?s ?p ?v}</span><br></pre></td></tr></tbody></table></figure>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#另一种方式，减去满足<span class="keyword">pattern</span>的资源（多数情况下表现相同</span><br><span class="line">MINUS {?s ?p ?v}</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h4 id="Serching-Futher-In-The-Data"><a href="#Serching-Futher-In-The-Data" class="headerlink" title="Serching Futher In The Data"></a>Serching Futher In The Data</h4><ul>
+<li>RDF三元组中的对象可以是字符串或者URI，字符串值更易读，但是<strong>URI使得将该数据和其它数据链接起来更加容易</strong></li>
+<li>如果一个数据集中资源的URI可以和另一个数据集中的URI对应起来，哪怕数据集来自不同的地方，不清楚组织形式，也可以利用SPARQL查询到更多的信息</li>
+<li><strong>逗号</strong>表示“接下来的三元组主语谓语和前一个三元组的相同”</li>
+<li>利用属性路径（property paths）：  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># 借助正则表达式的符号<span class="operator">+</span>（<span class="keyword">one</span> <span class="keyword">or</span> more）,返回直接引用、间接引用了A的论文</span><br><span class="line"><span class="keyword">SELECT</span> ?s </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{?s c:cites<span class="operator">+</span> :paperA.}</span><br><span class="line"># 指定引用层数</span><br><span class="line">#{?s c:cites{<span class="number">3</span>} :paperA.}</span><br><span class="line">#相同效果</span><br><span class="line">#{?s c:cites<span class="operator">/</span>c:cites<span class="operator">/</span>c:cites :paperA.}</span><br><span class="line">#<span class="operator">^</span>表示取相反,返回A引用的文章</span><br><span class="line">#{?s <span class="operator">^</span>c:cites :paperA.}</span><br><span class="line"># <span class="operator">^</span>结合property path的例子：引用了F引用的文章的文章</span><br><span class="line">#{</span><br><span class="line">#    ?s c:cites<span class="operator">/</span><span class="operator">^</span>c:cites :paperF .</span><br><span class="line">#    <span class="keyword">FILTER</span>(?s <span class="operator">!=</span> :paperF)</span><br><span class="line">#}</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h4 id="Searching-With-Blank-Nodes"><a href="#Searching-With-Blank-Nodes" class="headerlink" title="Searching With Blank Nodes"></a>Searching With Blank Nodes</h4><ul>
+<li>空白节点的任何名称都是临时的，通常会给一个变量名</li>
+<li>过渡的东西，用来链接三元组</li>
+<li>最终的select列表中一般不包含空白节点</li>
+</ul>
+<h4 id="Eliminating-Redundant-Output"><a href="#Eliminating-Redundant-Output" class="headerlink" title="Eliminating Redundant Output"></a>Eliminating Redundant Output</h4><ul>
+<li>DISTINCT关键字</li>
+<li>DISTINCT关键字不会增加查询结构的复杂性（就是在SELECT内容前面加个DISTINCT</li>
+</ul>
+<h4 id="Combining-Different-Search-Conditions"><a href="#Combining-Different-Search-Conditions" class="headerlink" title="Combining Different Search Conditions"></a>Combining Different Search Conditions</h4><ul>
+<li>UNION关键字：指定多个graph patterns，返回满足任意一个pattern的数据的组合(a combination of all the data that fits any of those patterns) </li>
+<li>有些SPARQL处理器在其返回结果中使用声明的前缀，使得结果可读性更强</li>
+</ul>
+<h4 id="Filtering-Data-Based-On-Conditions"><a href="#Filtering-Data-Based-On-Conditions" class="headerlink" title="Filtering Data Based On Conditions"></a>Filtering Data Based On Conditions</h4><ul>
+<li>FILTER() 只有一个参数，表达式只要返回的是布尔值就可以作为参数</li>
+<li>RDF解析器读入输入数据时，它将这些前缀映射到适当的名称空间URIs，然后将数据交给查询处理器</li>
+<li>!isURI(?city): 如果?city不是一个正常的URI，返回true</li>
+<li>IN关键字：查询某个变量属于列表的三元组（前面加NOT可以表示相反的意思  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># ask <span class="keyword">for</span> data <span class="keyword">where</span> the ?v <span class="keyword">is</span> either A <span class="keyword">or</span> B</span><br><span class="line"><span class="keyword">FILTER</span>(?v <span class="keyword">IN</span> (A,B))</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h4 id="Retrieving-A-Specific-Number-Of-Results"><a href="#Retrieving-A-Specific-Number-Of-Results" class="headerlink" title="Retrieving A Specific Number Of Results"></a>Retrieving A Specific Number Of Results</h4><ul>
+<li>LIMIT关键字</li>
+<li>放在花括号外面</li>
+<li>OFFSET关键字:跳过几个结果</li>
+</ul>
+<h4 id="Querying-Named-Graphs"><a href="#Querying-Named-Graphs" class="headerlink" title="Querying Named Graphs"></a>Querying Named Graphs</h4><ul>
+<li>命名图(named graph)：为三元组集合命名，方便管理（进行替换之类的操作</li>
+<li>查询的数据集可以在查询内部用FROM指定，也可以在外部在ARQ命令行中指定，后者会覆盖前者  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> </span><br><span class="line"><span class="keyword">FROM</span><span class="operator">&lt;</span>xx.ttl<span class="operator">&gt;</span></span><br><span class="line"><span class="keyword">FROM</span><span class="operator">&lt;</span>yy.ttl<span class="operator">&gt;</span></span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{...}</span><br></pre></td></tr></tbody></table></figure></li>
+<li>指定的查询数据集构成了默认图(default graph)，它不属于任何命名图</li>
+<li>FROM NAMED :表示数据集不会被加入到默认图，查询时需要指定其graph name（ARQ的约定是将URI作为其name），第六章会有SPARQL1.1标准的相关内容  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ?lname ?courseName</span><br><span class="line"><span class="keyword">FROM</span> <span class="operator">&lt;</span>ex069.ttl<span class="operator">&gt;</span></span><br><span class="line"><span class="keyword">FROM</span> NAMED <span class="operator">&lt;</span>ex125.ttl<span class="operator">&gt;</span></span><br><span class="line"><span class="keyword">FROM</span> NAMED <span class="operator">&lt;</span>ex122.ttl<span class="operator">&gt;</span> # 即使这里写了，如果在查询中没有指定（GRAPH <span class="operator">&lt;</span>ex125.ttl<span class="operator">&gt;</span>），其数据不会被用来检索</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{</span><br><span class="line">    { ?student ab:lastName ?lname }</span><br><span class="line">    <span class="keyword">UNION</span></span><br><span class="line">    { GRAPH <span class="operator">&lt;</span>ex125.ttl<span class="operator">&gt;</span> { ?course ab:courseTitle ?courseName } }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<li>GRAPH关键字：查询中使用这个关键字表明引用特定命名图中的数据</li>
+<li>GRAPH后面也可以跟变量，让SPARQL处理器寻找满足某个模式的图  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#这里只设置了特定的命名图来查询，如果存在默认图，则没有任何返回结果</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> NAMED <span class="operator">&lt;</span>yyy.ttl<span class="operator">&gt;</span></span><br><span class="line"><span class="keyword">FROM</span> NAMED <span class="operator">&lt;</span>xxx.ttl<span class="operator">&gt;</span></span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{GRAPH ?g(?s ?p ?o)}</span><br></pre></td></tr></tbody></table></figure></li>
+<li>SPARQL处理器有一些预定义的命名图，当你在GRAPH中指定时不需要事先标识  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ?graph ?email </span><br><span class="line"><span class="keyword">FROM</span> <span class="operator">&lt;</span>ex134.ttl<span class="operator">&gt;</span> </span><br><span class="line"><span class="keyword">FROM</span> NAMED <span class="operator">&lt;</span>ex125.ttl<span class="operator">&gt;</span> </span><br><span class="line"><span class="keyword">FROM</span> NAMED <span class="operator">&lt;</span>ex122.ttl<span class="operator">&gt;</span> </span><br><span class="line"><span class="keyword">WHERE</span> </span><br><span class="line">{</span><br><span class="line">    ?graph dc:<span class="type">date</span> "2011-09-24" . </span><br><span class="line">    { GRAPH ?graph { ?s ab:email ?email } }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h4 id="Queries-In-Your-Queries"><a href="#Queries-In-Your-Queries" class="headerlink" title="Queries In Your Queries"></a>Queries In Your Queries</h4><ul>
+<li>子查询特征：可以将复杂的查询细分，又可以将来自不同查询的结果合并</li>
+<li>每个子查询必须放到自己的花括号中</li>
+</ul>
+<h4 id="Combining-Values-And-Assigning-Values-To-Variables"><a href="#Combining-Values-And-Assigning-Values-To-Variables" class="headerlink" title="Combining Values And Assigning Values To Variables"></a>Combining Values And Assigning Values To Variables</h4><ul>
+<li>sparql查询出来的值可以用于数学运算，函数调用</li>
+<li>BIND关键字  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#数学运算的例子</span><br><span class="line">#这里利用amount创建了变量tip和total</span><br><span class="line"><span class="keyword">SELECT</span> ?description </span><br><span class="line">?amount </span><br><span class="line">((?amount <span class="operator">*</span> <span class="number">.2</span>) <span class="keyword">AS</span> ?tip) </span><br><span class="line">((?amount <span class="operator">+</span> ?tip) <span class="keyword">AS</span> ?total)</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{</span><br><span class="line">    ?meal e:description ?description ;</span><br><span class="line">          e:amount ?amount .</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#函数调用的例子</span><br><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">(UCASE(SUBSTR(?description,<span class="number">1</span>,<span class="number">3</span>))<span class="keyword">as</span> ?mealCode) </span><br><span class="line">?amount </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{</span><br><span class="line">    ?meal e:description ?description ;</span><br><span class="line">          e:amount ?amount .</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#改进,expression calculation moved <span class="keyword">to</span> a subquery,利用BIND关键字为变量赋值</span><br><span class="line"><span class="keyword">SELECT</span> ?mealCode ?amount</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{</span><br><span class="line">    ?meal e:description ?description ;</span><br><span class="line">          e:amount ?amount .</span><br><span class="line">    BIND (UCASE(SUBSTR(?description,<span class="number">1</span>,<span class="number">3</span>)) <span class="keyword">as</span> ?mealCode)</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h4 id="Sorting-Aggregating-Finding-The-Biggest-And-Smallest-And…"><a href="#Sorting-Aggregating-Finding-The-Biggest-And-Smallest-And…" class="headerlink" title="Sorting, Aggregating, Finding The Biggest And Smallest And…"></a>Sorting, Aggregating, Finding The Biggest And Smallest And…</h4><ul>
+<li>SPARQL使用<strong>ORDER BY</strong>来排序（默认从小到大）.  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 根据amount排序</span><br><span class="line"><span class="keyword">SELECT</span> ?description ?<span class="type">date</span> ?amount</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{</span><br><span class="line">    ?meal e:description ?description ;</span><br><span class="line">    e:<span class="type">date</span> ?<span class="type">date</span> ;</span><br><span class="line">    e:amount ?amount .</span><br><span class="line">}</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> ?amount</span><br></pre></td></tr></tbody></table></figure></li>
+<li>从大到小排序：利用DESC()，括号里面是排序用的指标  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#根据amount从大到小排序</span><br><span class="line"><span class="keyword">SELECT</span> ?description ?<span class="type">date</span> ?amount </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{</span><br><span class="line">    ?meal e:description ?description ;</span><br><span class="line">        e:<span class="type">date</span> ?<span class="type">date</span> ;</span><br><span class="line">        e:amount ?amount .</span><br><span class="line">}</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">DESC</span>(?amount)</span><br></pre></td></tr></tbody></table></figure></li>
+<li>多条件排序，各个条件空格隔开  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 先根据description排序（字母表），再根据amount从大到小排序</span><br><span class="line"><span class="keyword">SELECT</span> ?description ?<span class="type">date</span> ?amount </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{</span><br><span class="line">    ?meal e:description ?description ;</span><br><span class="line">        e:<span class="type">date</span> ?<span class="type">date</span> ;</span><br><span class="line">        e:amount ?amount .</span><br><span class="line">}</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> ?description <span class="keyword">DESC</span>(?amount)</span><br></pre></td></tr></tbody></table></figure></li>
+<li>找最值<ul>
+<li>sparql1.0: 先排序，然后LIMIT 1</li>
+<li>sparql1.1: MAX(),MIN()</li>
+</ul>
+</li>
+<li>均值：AVG()  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> (<span class="built_in">AVG</span>(?amount) <span class="keyword">as</span> ?avgAmount)</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{</span><br><span class="line">    ?meal e:amount ?amount .</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<li>求和SUM(),计数COUNT()</li>
+<li>GROUP_CONCAT(): 将很多数据绑定到一个变量，默认的分隔符是空格  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 返回一个amountlist，形如“<span class="number">25.05</span>,<span class="number">10.00</span>,<span class="number">6.65</span>,<span class="number">31.45</span>”</span><br><span class="line"><span class="keyword">SELECT</span> (GROUP_CONCAT(?amount;SEPARATOR <span class="operator">=</span> <span class="string">','</span>) <span class="keyword">AS</span> amountlist)</span><br><span class="line"><span class="keyword">WHERE</span> { ?meal e:amount ?amount.} </span><br></pre></td></tr></tbody></table></figure></li>
+<li>GROUP BY: 根据某属性分组；代入SUM()函数可以求和，类似的，可以代入别的函数  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 统计早中晚餐总数</span><br><span class="line"><span class="keyword">SELECT</span> ?description (<span class="built_in">SUM</span>(?amount) <span class="keyword">AS</span> ?meanTotal)</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{...}</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> ?description</span><br></pre></td></tr></tbody></table></figure></li>
+<li>HAVING 关键字：限定显示出来的结果需要满足的条件  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#我们只对总数超过<span class="number">20</span>的感兴趣</span><br><span class="line"><span class="keyword">SELECT</span> ?description (<span class="built_in">SUM</span>(?amount) <span class="keyword">AS</span> ?meanTotal)</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{...}</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> ?description</span><br><span class="line"><span class="keyword">HAVING</span> (<span class="built_in">SUM</span>(?amount)<span class="operator">&gt;</span><span class="number">20</span>)</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h4 id="Query-A-Remote-SPARQL-Service"><a href="#Query-A-Remote-SPARQL-Service" class="headerlink" title="Query A Remote SPARQL Service"></a>Query A Remote SPARQL Service</h4><ul>
+<li>查询远程sparql服务<ul>
+<li>FROM 关键字(RDF file)  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ?title</span><br><span class="line"><span class="keyword">FROM</span> <span class="operator">&lt;</span>xxx:<span class="operator">/</span><span class="operator">/</span>xxx.xxx.xxxx<span class="operator">/</span>xxx<span class="operator">&gt;</span></span><br><span class="line">{?s dc:title ?title}</span><br></pre></td></tr></tbody></table></figure></li>
+<li>SERVICE 关键字(SPARQL endpoint)  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 在SPAERQL endpoint运行查询得到一些内容，再进行检索返回结果</span><br><span class="line"><span class="keyword">SELECT</span> ?p ?o</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{</span><br><span class="line">    SERVICE <span class="operator">&lt;</span>xxx:<span class="operator">/</span><span class="operator">/</span>xxx.xxx<span class="operator">/</span>xxx<span class="operator">&gt;</span></span><br><span class="line">    {</span><br><span class="line">        <span class="keyword">SELECT</span> ?p ?o</span><br><span class="line">        <span class="keyword">WHERE</span> {xxx ?p ?o}</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+</li>
+<li><strong>ARQ 必须指定–data参数，即便查询对数据没有任何操作（上面的查询，其实只是指定了待查询的endpoint，而不是数据</strong></li>
+<li>可以借助<strong>D2RQ</strong>使用SPARQL查询关系数据库（RDB）</li>
+</ul>
+<h4 id="Federated-Queries-Searching-Multiple-Datasets-With-One-Query"><a href="#Federated-Queries-Searching-Multiple-Datasets-With-One-Query" class="headerlink" title="Federated Queries:Searching Multiple Datasets With One Query"></a>Federated Queries:Searching Multiple Datasets With One Query</h4><ul>
+<li>联合查询(Federated Queries):一个query查询多个数据集<ul>
+<li>第一个子查询中绑定的变量，在之后的子查询中依旧可用</li>
+<li>如果数据集之间关系密切，上面的特点就会很有用（用来交叉引用）</li>
+<li>如果一个查询由两个子查询，子查询1返回a个结果，子查询2返回b个结果，那么整体查询就返回a*b个结果（cross-product）</li>
+<li>子查询依次执行，可能会花点时间</li>
+</ul>
+</li>
+</ul>
+<h3 id="Coping-Creating-And-Converting-Data"><a href="#Coping-Creating-And-Converting-Data" class="headerlink" title="Coping,Creating,And Converting Data"></a>Coping,Creating,And Converting Data</h3><p>除了查询出结果还能做更多的事</p>
+<h4 id="Query-Forms-SELECT-DESCRIBE-ASK-and-CONSTRUCT"><a href="#Query-Forms-SELECT-DESCRIBE-ASK-and-CONSTRUCT" class="headerlink" title="Query Forms: SELECT, DESCRIBE, ASK, and CONSTRUCT"></a>Query Forms: SELECT, DESCRIBE, ASK, and CONSTRUCT</h4><ul>
+<li>CONSTRUCT返回三元组；可以返回原数据也可以抽取出值来创建新的三元组；可以用来复制、创建、转换</li>
+<li>ASK询问处理器给定的图模式是否描述特定数据集中的一组三元组，返回一个布尔值；可以用来自动化数据处理流程中的质量控制；</li>
+<li>DESCRIBE要求提供描述特定资源的三元组</li>
+</ul>
+<h4 id="Copying-Data"><a href="#Copying-Data" class="headerlink" title="Copying Data"></a>Copying Data</h4><ul>
+<li>利用CONSTRUCT抽取三元组；结合GRAPH关键字可以从特定命名图中抽取；SELECT后面跟的是变量列表，CONSTRUCT后面跟的是想要构造的三元组      <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#construct后面跟的是三元组，用花括号包围,里面可以包含任意个三元组模式（triple patterns）</span><br><span class="line">CONSTRUCT</span><br><span class="line">{?person ?p ?o}</span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{...}</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h4 id="Creating-New-Data"><a href="#Creating-New-Data" class="headerlink" title="Creating New Data"></a>Creating New Data</h4><ul>
+<li>利用一些函数处理数据，得到新的字段</li>
+<li>指明资源所属的类会让信息推断更加容易</li>
+<li>所谓的创建信息其实是将隐含的信息明确化</li>
+</ul>
+<h4 id="Converting-Data"><a href="#Converting-Data" class="headerlink" title="Converting Data"></a>Converting Data</h4><ul>
+<li>将一个命名空间中的属性转换到需要的命名空间</li>
+<li>意味着规范化URI以便更加容易地组合数据</li>
+<li>owl:sameAs是DBpedia中用来将不同来源的资源联系起来的方式</li>
+</ul>
+<h4 id="Finding-Bad-Data"><a href="#Finding-Bad-Data" class="headerlink" title="Finding Bad Data"></a>Finding Bad Data</h4><ul>
+<li>schema是一组关于数据结构和数据类型的规则</li>
+<li>如果数据遵循了某个schema那么就不需要程序员写代码应对“给字符串加了1”这样的情形了</li>
+<li>语义网应用采用了别的方法，通过添加更多的metadata</li>
+<li>使用SPARQL添加限制而不是OWL</li>
+</ul>
+<h4 id="Defining-Rules-with-SPARQL"><a href="#Defining-Rules-with-SPARQL" class="headerlink" title="Defining Rules with SPARQL"></a>Defining Rules with SPARQL</h4><ul>
+<li>rules expressed as queries</li>
+<li>一些常用的：<ul>
+<li>isURI</li>
+<li>datatype(?amount)) != xsd:integer</li>
+<li>!(bound(?grade))</li>
+<li>?grade &lt; 5</li>
+</ul>
+</li>
+</ul>
+<h4 id="Generating-Data-About-Broken-Rules"><a href="#Generating-Data-About-Broken-Rules" class="headerlink" title="Generating Data About Broken Rules"></a>Generating Data About Broken Rules</h4><ul>
+<li>将ASK换为CONSTRUCT</li>
+<li>问题建模：问题类型、相关属性</li>
+<li>可以使用Union将不同的规则加合并，但是随着规则的增多，这种方式会产生越来越多的错误（ there’d be greater and greater room for error</li>
+<li>好的处理方式是：分开存储规则，使用是时候pipeline</li>
+</ul>
+<h4 id="Using-Existing-SPARQL-Rules-Vocabularies"><a href="#Using-Existing-SPARQL-Rules-Vocabularies" class="headerlink" title="Using Existing SPARQL Rules Vocabularies"></a>Using Existing SPARQL Rules Vocabularies</h4><ul>
+<li>Schemarama</li>
+<li>SPIN</li>
+<li>关系数据库–API–check for rule compliance using SPARQL</li>
+</ul>
+<h4 id="Asking-for-a-Description-of-a-Resource"><a href="#Asking-for-a-Description-of-a-Resource" class="headerlink" title="Asking for a Description of a Resource"></a>Asking for a Description of a Resource</h4><ul>
+<li>DESCRIBE+URI :返回资源的一些信息，具体返回结果和SPARQL查询引擎有关</li>
+<li>CONSTRUCT可以完成相同的事情，with better control，因此不太推荐在serious的应用开发中使用</li>
+</ul>
+<h3 id="Datatypes-And-Functions"><a href="#Datatypes-And-Functions" class="headerlink" title="Datatypes And Functions"></a>Datatypes And Functions</h3><h4 id="Datatypes-and-Queries"><a href="#Datatypes-and-Queries" class="headerlink" title="Datatypes and Queries"></a>Datatypes and Queries</h4><ul>
+<li>数据类型元数据的存储是记录语义信息的最早方式之一</li>
+<li>标明数据类型方便理解，不标明的话会有默认设置</li>
+<li>str()强制类型转换：FILTER (str(?o) = “two”) #返回所有值为”two”的</li>
+</ul>
+<h4 id="Representing-Strings"><a href="#Representing-Strings" class="headerlink" title="Representing Strings"></a>Representing Strings</h4><ul>
+<li>单引号，双引号，三个单引号或者双引号</li>
+<li>ARQ输出的时候:使用双引号分隔字符串；回车为/r，换行为/n，转义为/；输出的顺序doesn’t matter</li>
+</ul>
+<h4 id="Comparing-Values-and-Doing-Arithmetic"><a href="#Comparing-Values-and-Doing-Arithmetic" class="headerlink" title="Comparing Values and Doing Arithmetic"></a>Comparing Values and Doing Arithmetic</h4><ul>
+<li>当使用不同的数字类型显式键入不同的值时，仍然可以在执行算术时将它们一起使用：比如integer和decimal可以乘到一起</li>
+</ul>
+<h4 id="Functions"><a href="#Functions" class="headerlink" title="Functions"></a>Functions</h4><ul>
+<li>SPARQL 1.0规范提供了一些基本函数，SPARQL 1.1提供了更广泛的选择，几乎所有都基于XPath函数</li>
+<li>SPARQL处理器可以提供其实施者想要包含的任何扩展功能</li>
+</ul>
+<h4 id="Program-Logic-Functions"><a href="#Program-Logic-Functions" class="headerlink" title="Program Logic Functions"></a>Program Logic Functions</h4><ul>
+<li>IF()函数有三个参数。 如果第一个参数为true，则该函数返回第二个参数的值; 否则返回第三个</li>
+<li>COALESCE():接受很多参数，返回the first one that doesn’t result in an error  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ?<span class="keyword">first</span> ?<span class="keyword">last</span> </span><br><span class="line"><span class="keyword">WHERE</span> </span><br><span class="line">{</span><br><span class="line">?s ab:lastName ?<span class="keyword">last</span>; </span><br><span class="line">   ab:firstName ?firstname . </span><br><span class="line">OPTIONAL{ ?s ab:nick ?nickname . } </span><br><span class="line">BIND (<span class="built_in">COALESCE</span>(?nickname,?firstname) <span class="keyword">AS</span> ?<span class="keyword">first</span>)</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h4 id="Node-Type-and-Datatype-Checking-Functions"><a href="#Node-Type-and-Datatype-Checking-Functions" class="headerlink" title="Node Type and Datatype Checking Functions"></a>Node Type and Datatype Checking Functions</h4><ul>
+<li>函数参数可能需要是特定类型，数据字段也需要是特定类型</li>
+<li>datatype()函数可以用来检测类型</li>
+<li>isBlank(), isLiteral(), isNumeric(), isIRI(), and isURI()</li>
+<li>数字，字符串和关键字true和false（全部写成小写）都是literals，只有URI和空白节点不是</li>
+<li>datatype(params) 返回一个URI，标识params的类型,params为空白节点和URIs时返回为空</li>
+<li>bound()告诉我们一个变量是否有一个绑定的值</li>
+</ul>
+<h4 id="Node-Type-Conversion-Functions"><a href="#Node-Type-Conversion-Functions" class="headerlink" title="Node Type Conversion Functions"></a>Node Type Conversion Functions</h4><ul>
+<li>URI() function lets you convert values to URIs if possible</li>
+<li>在将值传递给URI()或IRI()函数之前，使用ENCODE_FOR_URI()函数预处理是个推荐的做法，但要注意它只接受simple literals或xsd：string</li>
+<li>str():返回传入资源的字符串形式，传入为空白节点时不返回值</li>
+<li>一个例子：  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CONSTRUCT {?s ?p ?testURI.} </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{</span><br><span class="line">    ?s ?p ?o . </span><br><span class="line">    BIND( IF(isURI(?o), ?o, URI(ENCODE_FOR_URI(str(?o))) ) <span class="keyword">AS</span> ?testURI)</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h4 id="Datatype-Conversion"><a href="#Datatype-Conversion" class="headerlink" title="Datatype Conversion"></a>Datatype Conversion</h4><ul>
+<li>conversion to boolean is pickier: xsd:boolean(?o)不能转换True，可以转换true</li>
+<li>xsd:dateTime()不能转换“2011-11-12” ，可以转换“2011-11-12T14:30:00”</li>
+<li>STRDT()接收两个参数，一个literal值和一个类型URI，创建一个typed literal（自定义类型）  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CONSTRUCT { ?s u:amount ?newAmount . } </span><br><span class="line"><span class="keyword">WHERE</span> {</span><br><span class="line">    ?s im:product ?prodName ;</span><br><span class="line">       im:amount ?amount ; </span><br><span class="line">       im:units ?units .</span><br><span class="line">       BIND (STRDT(?amount, URI(CONCAT("http://learningsparql.com/ns/units#",?units))) <span class="keyword">AS</span> ?newAmount)</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+</ul>
+<h4 id="Checking-Adding-and-Removing-Spoken-Language-Tags"><a href="#Checking-Adding-and-Removing-Spoken-Language-Tags" class="headerlink" title="Checking, Adding, and Removing Spoken Language Tags"></a>Checking, Adding, and Removing Spoken Language Tags</h4><ul>
+<li>FILTER ( lang(?label) = “en” ) #只返回英文标签</li>
+<li>BIND (str(?label) AS ?strippedLabel) #去掉@en，只返回文字信息</li>
+<li>STRLANG()函数可以为属性加标签，比如：STRLANG(?USTerm,”en-US”)</li>
+</ul>
+<h4 id="String-Functions"><a href="#String-Functions" class="headerlink" title="String Functions"></a>String Functions</h4><ul>
+<li>STRLEN(), SUBSTR(), UCASE(), and LCASE()</li>
+<li>STRSTARTS(), STRENDS(), CONTAINS(),regex() #返回布尔值</li>
+<li>The regex() function expects its first argument to be either an xsd:string or a simple literal with no language tag。可以str()一下</li>
+</ul>
+<h4 id="Numeric-Functions"><a href="#Numeric-Functions" class="headerlink" title="Numeric Functions"></a>Numeric Functions</h4><ul>
+<li>abs(),round(),ceil(),flloor()</li>
+<li>rand()+CONSTRUCT :生成样本数据</li>
+</ul>
+<h4 id="Date-and-Time-Functions"><a href="#Date-and-Time-Functions" class="headerlink" title="Date and Time Functions"></a>Date and Time Functions</h4><ul>
+<li>now(),timezone(),tz()</li>
+</ul>
+<h4 id="Hash-Functions"><a href="#Hash-Functions" class="headerlink" title="Hash Functions"></a>Hash Functions</h4><ul>
+<li>MD5(),SHA1(),SHA224(),SHA256(),SHA384(),SHA512()</li>
+</ul>
+<h4 id="Extension-Functions"><a href="#Extension-Functions" class="headerlink" title="Extension Functions"></a>Extension Functions</h4><ul>
+<li>不同的SPARQL处理器支持的拓展函数不同</li>
+<li>less portable</li>
+</ul>
+<h3 id="Updating-Data-With-SPARQL"><a href="#Updating-Data-With-SPARQL" class="headerlink" title="Updating Data With SPARQL"></a>Updating Data With SPARQL</h3><p>query the data with the SPARQL query language and manage it with the update language.</p>
+<h4 id="Getting-Started-with-Fuseki"><a href="#Getting-Started-with-Fuseki" class="headerlink" title="Getting Started with Fuseki"></a>Getting Started with Fuseki</h4><ul>
+<li>下载、安装</li>
+</ul>
+<h4 id="Adding-Data-to-a-Dataset"><a href="#Adding-Data-to-a-Dataset" class="headerlink" title="Adding Data to a Dataset"></a>Adding Data to a Dataset</h4><ul>
+<li>更新文件后缀为.ru，意思是一个插入请求，not a query<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">INSERT</span> DATA后面跟要插入的triples</span><br><span class="line"># 简单快速插入数据</span><br><span class="line"><span class="keyword">INSERT</span> DATA </span><br><span class="line">{d:i8301 ab:homeTel "(718) 440-9821" . ab:Person a rdfs:Class .}</span><br></pre></td></tr></tbody></table></figure>
+<figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#<span class="keyword">where</span>后面跟triple patterns，可以引用上面的变量</span><br><span class="line"># 灵活创造</span><br><span class="line"><span class="keyword">INSERT</span> {d:i8301 ab:homeTel "(718) 440-9821" . ab:Person a rdfs:Class .}</span><br><span class="line"><span class="keyword">WHERE</span> {}</span><br></pre></td></tr></tbody></table></figure></li>
+<li>三元组模式就是任意位置都可以被变量替换的三元组</li>
+</ul>
+<h4 id="Deleting-Data"><a href="#Deleting-Data" class="headerlink" title="Deleting Data"></a>Deleting Data</h4><ul>
+<li>DELETE DATA{}和DELETE{}WHERE{}</li>
+<li>DELETE WHERE{} :删除匹配where条件的三元组</li>
+<li>CLEAR  DEFAULT</li>
+</ul>
+<h4 id="Changing-Existing-Data"><a href="#Changing-Existing-Data" class="headerlink" title="Changing Existing Data"></a>Changing Existing Data</h4><ul>
+<li>在一次更新操作中，删除+插入</li>
+<li>即使删除发生在插入之前，INSERT图形模式仍然具有WHERE子句存储的所有信息</li>
+</ul>
+<h4 id="Named-Graphs"><a href="#Named-Graphs" class="headerlink" title="Named Graphs"></a>Named Graphs</h4><ul>
+<li>SPARQL更新允许使用分号连接多个操作</li>
+<li>将三元组插入不存在的图时，SPARQL处理器会创建该图</li>
+</ul>
+<h4 id="Dropping-Graphs"><a href="#Dropping-Graphs" class="headerlink" title="Dropping Graphs"></a>Dropping Graphs</h4><ul>
+<li>DROP GRAPH d:g1 #删除图g1</li>
+<li>DROP DEFAULT #清除默认图，（因为默认图总是存在，即使为空</li>
+<li>DROP NAMED：删除命名图</li>
+<li>DROP ALL ：删除所有图</li>
+<li>SPARQL Update没有UNDO操作，因此DROP ALL是个需要慎重的动作</li>
+<li>这里的DROP换为CLEAR表示图中的清除三元组</li>
+<li>CREATE GRAPH：创建一个空白图</li>
+</ul>
+<h4 id="Named-Graph-Syntax-Shortcuts-WITH-and-USING"><a href="#Named-Graph-Syntax-Shortcuts-WITH-and-USING" class="headerlink" title="Named Graph Syntax Shortcuts: WITH and USING"></a>Named Graph Syntax Shortcuts: WITH and USING</h4><ul>
+<li>with语句指明要操作的图，比GRAPH节省</li>
+<li>USING的作用类似于SELECT语句的FROM</li>
+<li>USING NAMED === FROM NAMED  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">USING</span> NAMED d:g2 </span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line">{ </span><br><span class="line">    # 这里一定要声明GRAPH d:g2</span><br><span class="line">    GRAPH d:g2 {?s dm:tag "five" . ?s dm:tag "six" .}</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></li>
+<li>使用USING就不要使用WITH</li>
+</ul>
+<h4 id="Deleting-and-Replacing-Triples-in-Named-Graphs"><a href="#Deleting-and-Replacing-Triples-in-Named-Graphs" class="headerlink" title="Deleting and Replacing Triples in Named Graphs"></a>Deleting and Replacing Triples in Named Graphs</h4>  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> DATA { GRAPH d:g2{ d:x dm:tag "six" }}</span><br></pre></td></tr></tbody></table></figure>
+
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># GRAPH<span class="operator">+</span>图名或者变量名</span><br><span class="line"><span class="keyword">DELETE</span> { GRAPH ?g { ?s ?p "three" } } </span><br><span class="line"><span class="keyword">WHERE</span> { GRAPH ?g { ?s ?p "three" } }</span><br></pre></td></tr></tbody></table></figure>
+  <figure class="highlight sql"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">WITH</span> d:g1 </span><br><span class="line"><span class="keyword">DELETE</span> { ?s ?p "four"}</span><br><span class="line"><span class="keyword">WHERE</span> { ?s ?p "four"}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="Building-Applications-With-SPARQL"><a href="#Building-Applications-With-SPARQL" class="headerlink" title="Building Applications With SPARQL"></a>Building Applications With SPARQL</h3><ul>
+<li>将查询发送到端点的最常见方式是将查询的转义版本作为参数添加到端点的URI</li>
+<li>D2RQ</li>
+<li>SPARQLWrapper for python</li>
+<li>ARQ source code for java</li>
+</ul>
+<h3 id="Glossary"><a href="#Glossary" class="headerlink" title="Glossary"></a>Glossary</h3><ul>
+<li><strong>blank node</strong>: A subject or object in an RDF graph that has no identity. These are typically used to group together other values</li>
+<li><strong>default graph</strong>: The triples in an RDF dataset that don’t belong to a named graph</li>
+<li><strong>IRI</strong>: Internationalized Resource Identifier: a URI that allows a wider choice of characters,making it “internationalized.”</li>
+<li><strong>literal</strong>: A value, as opposed to a URI, which is a name for something. A literal may have a datatype or a spoken language tag associated with it, but not both. A simple literal is a literal with no language tag or datatype</li>
+<li><strong>N3</strong>: A non-XML RDF serialization format developed by Tim Berners-Lee. Turtle is a simplified version of N3</li>
+<li><strong>N-Triples</strong>: A very simple RDF serialization format that shows complete URIs with no abbreviation and a triple on each line. Often used as a graph dump format</li>
+<li><strong>named graph</strong>: A set of triples, typically within a larger collection of them, that can be referenced with a particular name. The name is a URI</li>
+<li><strong>RDF/XML</strong>: RDF’s original serialization format, based on XML</li>
+<li><strong>RDFS</strong>: the RDF Schema (RDFS) specification lets you specify classes, properties, and metadata about those classes and properties. These serve as metadata to let you infer new facts about your data, not as validation rules to indicate correct versus incorrect data</li>
+<li><strong>triplestore</strong>: A specialized database manager designed for storing triples</li>
+<li><strong>Turtle</strong>: An increasingly popular RDF serialization format based on N3</li>
+<li><strong>URI</strong>: “URI” is used more often to refer to an identifier, and “URL” to refer to a locator, or address.We use URIs to identify resources and property names in RDF</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/03/28/TensorFlow01/" rel="prev" title="TensorFlow Ops">
+                  <i class="fa fa-angle-left"></i> TensorFlow Ops
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/03/10/kgdemo/" rel="next" title="知识图谱小demo">
+                  知识图谱小demo <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">riki</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">37k</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
+</html>
