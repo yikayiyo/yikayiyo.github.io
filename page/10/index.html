@@ -153,7 +153,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-count">61</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -181,6 +181,304 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2017/06/20/Dynamic-%20programming/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+      <meta itemprop="name" content="yikayiyo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Misbehavior">
+      <meta itemprop="description" content="浪漫在哪里">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Misbehavior">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2017/06/20/Dynamic-%20programming/" class="post-title-link" itemprop="url">Dynamic programming</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-06-20 21:07:02" itemprop="dateCreated datePublished" datetime="2017-06-20T21:07:02+08:00">2017-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>139</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <img src="/2017/06/20/Dynamic-%20programming/dp1.JPG" class="">
+<img src="/2017/06/20/Dynamic-%20programming/dp2.JPG" class="">
+
+<p><strong>5 steps</strong> to solve DP:</p>
+<p><strong>1.subprobs</strong><br><strong>2.guess</strong><br><strong>3.recurrence</strong><br><strong>4.order</strong><br><strong>5.orig prob</strong></p>
+<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">Find the contiguous subarray within an array (containing at least one number) which has the largest sum.</span></span><br><span class="line"><span class="string">For example, given the array [-2,1,-3,4,-1,2,1,-5,4],</span></span><br><span class="line"><span class="string">the contiguous subarray [4,-1,2,1] has the largest sum = 6.</span></span><br><span class="line"><span class="string">5 steps to DP:</span></span><br><span class="line"><span class="string">1.subprobs:  dp(i)-&gt; maxsubarray in nums[:i]</span></span><br><span class="line"><span class="string">2.guess:  for each nums[i] add it or not.</span></span><br><span class="line"><span class="string">3.recurrence:  dp(i)=max(nums[i]+dp(i-1),nums[i])</span></span><br><span class="line"><span class="string">4.order:  for i=1,..,n: dp(i)</span></span><br><span class="line"><span class="string">5.orig prob:  dp(n)</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">maxSubArray</span>(<span class="params">self, nums</span>):</span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type nums: List[int]</span></span><br><span class="line"><span class="string">        :rtype: int</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        curSum = maxSum = nums[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> nums[<span class="number">1</span>:]:</span><br><span class="line">            curSum = <span class="built_in">max</span>(num, curSum + num)</span><br><span class="line">            maxSum = <span class="built_in">max</span>(maxSum, curSum)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> maxSum</span><br></pre></td></tr></tbody></table></figure>
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2017/06/12/%E5%86%B3%E7%AD%96%E6%A0%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+      <meta itemprop="name" content="yikayiyo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Misbehavior">
+      <meta itemprop="description" content="浪漫在哪里">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Misbehavior">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2017/06/12/%E5%86%B3%E7%AD%96%E6%A0%91/" class="post-title-link" itemprop="url">决策树</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-06-12 10:09:29" itemprop="dateCreated datePublished" datetime="2017-06-12T10:09:29+08:00">2017-06-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>289</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="构造决策树"><a href="#构造决策树" class="headerlink" title="构造决策树"></a>构造决策树</h4><p>第一个问题:当前数据集上哪个特征在划分数据分类时起决定作用?为此需要一个评估标准.</p>
+<p>划分的大原则是:将无序的数据变得有序.</p>
+<p>划分之后接着划分,递归.</p>
+<p>递归结束条件:程序遍历完所有划分数据集的属性或者分支下的数据均为一个类型.</p>
+<p>为了度量引入了信息论的东西,也就是熵.</p>
+<h4 id="熵"><a href="#熵" class="headerlink" title="熵"></a>熵</h4><p>信息的定义:如果待分类的事务可能划分在多个分类中,则符号xi的信息定义为:<br>$$<br>l(x_i)=-\log_2 p(x_i),<br>$$</p>
+<p>其中p(xi)是选择该分类的概率.</p>
+<p>熵是信息的期望值.我们需要计算所有类别所有可能值包含的信息期望值:<br>$$<br>H=-\sum_{i=1}^n p(x_i)\log_2 p(x_i),<br>$$</p>
+<p>其中,n为样本分类.</p>
+<h4 id="另外"><a href="#另外" class="headerlink" title="另外"></a>另外</h4><p>数据最好是标称型的 ；(对于ID3算法,数值型数据最好是离散的.</p>
+<p>出现过拟合时,可以剪枝.</p>
+<p>剪枝策略,预剪枝或者后剪枝.</p>
+<p>别的决策数算法,C4.5|CART.</p>
+<p><a href="https://github.com/yikayiyo/machinelearninginaction/blob/master/Ch03/trees.py">https://github.com/yikayiyo/machinelearninginaction/blob/master/Ch03/trees.py</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+      <meta itemprop="name" content="yikayiyo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Misbehavior">
+      <meta itemprop="description" content="浪漫在哪里">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Misbehavior">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">借助义元改善词表示学习</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-06-09 10:01:00" itemprop="dateCreated datePublished" datetime="2017-06-09T10:01:00+08:00">2017-06-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <img src="/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/HowNet.png" class="" title="HowNet中的一个例子">
+<h4 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h4><p>  义元是语义上的最小单位，单词的每一个含义通常都是很多义元组合而成的。为了让每个词义的义元更加确切，人们进行了手工标注，并构建了常识性的语言知识库。这篇文章指出，单词的义元信息可以改善词表示学习（一种将单词映射到低维语义空间的技术，是许多NLP任务的一个基本步骤）。关键点在于利用义元信息准确捕捉单词在特定语境下的确切含义。具体说来，作者拓展了skip-gram框架，提出了三种义元编码模型来学习sememes-senses-words的表示，</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/06/09/%E5%80%9F%E5%8A%A9%E4%B9%89%E5%85%83%E6%94%B9%E5%96%84%E8%AF%8D%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -382,309 +680,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2017/05/23/2!=True/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
-      <meta itemprop="name" content="yikayiyo">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Misbehavior">
-      <meta itemprop="description" content="浪漫在哪里">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Misbehavior">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2017/05/23/2!=True/" class="post-title-link" itemprop="url">2!=True</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2017-05-23 10:59:19" itemprop="dateCreated datePublished" datetime="2017-05-23T10:59:19+08:00">2017-05-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>574</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>问题:为什么2!=True呢?</p>
-<figure class="highlight python"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">num=<span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">if</span> num==<span class="literal">True</span>:</span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span> <span class="string">'True'</span></span><br><span class="line"><span class="meta">... </span><span class="keyword">else</span>:</span><br><span class="line"><span class="meta">... </span>    <span class="built_in">print</span> <span class="string">'False'</span></span><br><span class="line"><span class="meta">... </span></span><br><span class="line"><span class="literal">False</span></span><br></pre></td></tr></tbody></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/05/23/2!=True/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2017/05/21/%E5%AE%9E%E4%BD%93%E6%8E%92%E5%BA%8F%E8%AE%BA%E6%96%87-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
-      <meta itemprop="name" content="yikayiyo">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Misbehavior">
-      <meta itemprop="description" content="浪漫在哪里">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Misbehavior">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2017/05/21/%E5%AE%9E%E4%BD%93%E6%8E%92%E5%BA%8F%E8%AE%BA%E6%96%87-2/" class="post-title-link" itemprop="url">实体排序论文-2</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2017-05-21 10:59:19" itemprop="dateCreated datePublished" datetime="2017-05-21T10:59:19+08:00">2017-05-21</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="知识图谱中实体相似度计算研究"><a href="#知识图谱中实体相似度计算研究" class="headerlink" title="知识图谱中实体相似度计算研究"></a>知识图谱中实体相似度计算研究</h3><h4 id="知识图谱"><a href="#知识图谱" class="headerlink" title="知识图谱"></a>知识图谱</h4><p>  本质是一种语义网络,结点代表实体或概念,边代表实体或概念间的各种语义关系.一个含有大量实体的知识库,如果构建得当,实体信息表示得当,可以很方便的供我们分析处理.</p>
-<h4 id="相似实体"><a href="#相似实体" class="headerlink" title="相似实体"></a>相似实体</h4><p>  对于实体间关系的研究,目前较多的集中在相似性的度量.判断实体之间的相似度首先要理解实体的语义信息,传统的字符串匹配不可行,例如让你从刘德华和马德华和张学友中选两个相似度较高的,</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/05/21/%E5%AE%9E%E4%BD%93%E6%8E%92%E5%BA%8F%E8%AE%BA%E6%96%87-2/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2017/05/18/%E5%AE%9E%E4%BD%93%E6%8E%92%E5%BA%8F%E8%AE%BA%E6%96%87-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
-      <meta itemprop="name" content="yikayiyo">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Misbehavior">
-      <meta itemprop="description" content="浪漫在哪里">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Misbehavior">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2017/05/18/%E5%AE%9E%E4%BD%93%E6%8E%92%E5%BA%8F%E8%AE%BA%E6%96%87-1/" class="post-title-link" itemprop="url">实体排序论文-1</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2017-05-18 20:34:30" itemprop="dateCreated datePublished" datetime="2017-05-18T20:34:30+08:00">2017-05-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="基于给定实体和属性的相似实体推荐方法"><a href="#基于给定实体和属性的相似实体推荐方法" class="headerlink" title="基于给定实体和属性的相似实体推荐方法"></a>基于给定实体和属性的相似实体推荐方法</h3><p>相似实体推荐主要用在问答系统和搜索引擎中.</p>
-<p>一个实体可能对应着多个概念,引入属性之后,我们更可能推断出查询意图.例如,苹果+总部,我们知道苹果指的是公司;苹果+口感,我们知道说的是水果.</p>
-<p>进行相似实体推荐,要做两件事:</p>
-<ul>
-<li>根据实体和不同属性的组合概率推断实体所属的概念</li>
-<li>得到该概念下候选的相似实体,排序后输出</li></ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/05/18/%E5%AE%9E%E4%BD%93%E6%8E%92%E5%BA%8F%E8%AE%BA%E6%96%87-1/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/11/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/11/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
@@ -707,7 +704,7 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">37k</span>
+    <span title="站点总字数">40k</span>
   </span>
 </div>
 

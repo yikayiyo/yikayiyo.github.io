@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icon.png">
+  <link rel="mask-icon" href="/icon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yikayiyo.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="管理后台的代码仓库目前没有开启语法检查，存在一些错误。并且项目由多人开发，不同风格的代码（缩进到底是用 2 个空格还是用 4 个空格还是用 Tab 呢？）掺杂在一起，给项目维护增加了没必要的难度 本文记录了对项目代码进行语法错误修正的过程，以及制定团队开发规范时推荐使用的插件和配置 命令行安装依赖1npm i -D eslint eslint-plugin-vue prettier eslint-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue项目引入Eslint+Prettier">
+<meta property="og:url" content="https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/index.html">
+<meta property="og:site_name" content="Misbehavior">
+<meta property="og:description" content="管理后台的代码仓库目前没有开启语法检查，存在一些错误。并且项目由多人开发，不同风格的代码（缩进到底是用 2 个空格还是用 4 个空格还是用 Tab 呢？）掺杂在一起，给项目维护增加了没必要的难度 本文记录了对项目代码进行语法错误修正的过程，以及制定团队开发规范时推荐使用的插件和配置 命令行安装依赖1npm i -D eslint eslint-plugin-vue prettier eslint-">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/nr-lint.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/nr-lint-fix.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-1.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-2.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-3.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-7.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-4.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-5.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-6.png">
+<meta property="og:image" content="https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-8.png">
+<meta property="article:published_time" content="2023-01-10T10:13:18.000Z">
+<meta property="article:modified_time" content="2023-11-23T06:53:16.558Z">
+<meta property="article:author" content="yikayiyo">
+<meta property="article:tag" content="前端">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/nr-lint.png">
+
+
+<link rel="canonical" href="https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/","path":"2023/01/10/Vue项目引入Eslint-Prettier/","title":"Vue项目引入Eslint+Prettier"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Vue项目引入Eslint+Prettier | Misbehavior</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="Misbehavior" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Misbehavior</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C"><span class="nav-number">1.</span> <span class="nav-text">命令行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="nav-number">1.1.</span> <span class="nav-text">安装依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E3%80%81%E7%BC%96%E8%BE%91%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.</span> <span class="nav-text">创建、编辑配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%91%BD%E4%BB%A4"><span class="nav-number">1.3.</span> <span class="nav-text">创建命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">1.4.</span> <span class="nav-text">执行命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VSCODE-%E6%8F%92%E4%BB%B6"><span class="nav-number">2.</span> <span class="nav-text">VSCODE 插件</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yikayiyo"
+      src="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+  <p class="site-author-name" itemprop="name">yikayiyo</p>
+  <div class="site-description" itemprop="description">浪漫在哪里</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yikayiyo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yikayiyo" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+      <meta itemprop="name" content="yikayiyo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Misbehavior">
+      <meta itemprop="description" content="浪漫在哪里">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Vue项目引入Eslint+Prettier | Misbehavior">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Vue项目引入Eslint+Prettier
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-01-10 18:13:18" itemprop="dateCreated datePublished" datetime="2023-01-10T18:13:18+08:00">2023-01-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-11-23 14:53:16" itemprop="dateModified" datetime="2023-11-23T14:53:16+08:00">2023-11-23</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>771</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>管理后台的代码仓库目前没有开启语法检查，存在一些错误。并且项目由多人开发，不同风格的代码（缩进到底是用 2 个空格还是用 4 个空格还是用 Tab 呢？）掺杂在一起，给项目维护增加了没必要的难度</p>
+<p>本文记录了对项目代码进行语法错误修正的过程，以及制定团队开发规范时推荐使用的插件和配置</p>
+<h2 id="命令行"><a href="#命令行" class="headerlink" title="命令行"></a>命令行</h2><h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D eslint eslint-plugin-vue prettier eslint-config-prettier</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="创建、编辑配置文件"><a href="#创建、编辑配置文件" class="headerlink" title="创建、编辑配置文件"></a>创建、编辑配置文件</h3><p>删除项目中旧的 <code>.eslintrc.js</code> 文件，修改 <code>.eslintignore</code> 文件</p>
+<figure class="highlight plaintext"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">build/*.js // [!code --]</span><br><span class="line">config/*.js // [!code --]</span><br><span class="line">src/assets</span><br><span class="line">src // [!code --]</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch .eslintrc.js .prettierrc.js</span><br></pre></td></tr></tbody></table></figure>
+
+<p>下面为样例配置</p>
+<figure class="highlight javascript"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .eslintrc.js example</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = {</span><br><span class="line">  <span class="attr">root</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">parserOptions</span>: {</span><br><span class="line">    <span class="attr">parser</span>: <span class="string">'babel-eslint'</span>,</span><br><span class="line">    <span class="attr">sourceType</span>: <span class="string">'module'</span></span><br><span class="line">  },</span><br><span class="line">  <span class="attr">env</span>: {</span><br><span class="line">    <span class="attr">browser</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">node</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">es6</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">jquery</span>: <span class="literal">true</span></span><br><span class="line">  },</span><br><span class="line">  <span class="attr">extends</span>: [<span class="string">'plugin:vue/recommended'</span>, <span class="string">'prettier'</span>]</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="comment">// prettier example</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = {</span><br><span class="line">  <span class="attr">tabWidth</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">semi</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">singleQuote</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">singleAttributePerLine</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">trailingComma</span>: <span class="string">'es5'</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="创建命令"><a href="#创建命令" class="headerlink" title="创建命令"></a>创建命令</h3><p>修改 <code>package.json</code></p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"scripts"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="attr">"lint"</span><span class="punctuation">:</span> <span class="string">"eslint --ext .js,.vue src"</span><span class="punctuation">,</span>  <span class="comment">// [!code warning]</span></span><br><span class="line">    <span class="attr">"lint:fix"</span><span class="punctuation">:</span> <span class="string">"eslint --fix --ext .js,.vue src"</span><span class="punctuation">,</span> <span class="comment">// [!code warning]</span></span><br><span class="line">    <span class="attr">"format"</span><span class="punctuation">:</span> <span class="string">"prettier --write src"</span> <span class="comment">// [!code warning]</span></span><br><span class="line">  <span class="punctuation">}</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>其中 <code>lint</code> 用来检查语法错误，<code>lint:fix</code> 用来自动修复可以修复的错误，<code>format</code> 用来格式化代码</p>
+<h3 id="执行命令"><a href="#执行命令" class="headerlink" title="执行命令"></a>执行命令</h3><figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run lint</span><br></pre></td></tr></tbody></table></figure>
+
+<p>得到下面的结果</p>
+<figure>
+  <img src="/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/nr-lint.png" class="" title="执行 lint 命令">
+  <figcaption>😱</figcaption>
+</figure>
+
+<p>自动修复部分错误</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run lint:fix</span><br></pre></td></tr></tbody></table></figure>
+
+<figure>
+  <img src="/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/nr-lint-fix.png" class="" title="执行 lint:fix 命令">
+  <figcaption>🥲</figcaption>
+</figure>
+
+<p>需要手动修复的一些错误</p>
+<figure style="border:1px solid #292d3e; margin-bottom: 10px;">
+  <img src="/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-1.png" class="">
+  <figcaption style="text-align: center;"><em>p标签绑定v-model</em></figcaption>
+</figure>
+
+<figure style="border:1px solid #292d3e; margin-bottom: 10px;">
+  <img src="/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-2.png" class="">
+  <figcaption style="text-align: center;"><em>同时使用 v-for 和 v-if</em></figcaption>
+</figure>
+
+<figure style="border:1px solid #292d3e; margin-bottom: 10px;">
+  <img src="/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-3.png" class="">
+  <figcaption style="text-align: center;"><em>合并代码时遗留的多余标签？</em></figcaption>
+</figure>
+
+<figure style="border:1px solid #292d3e; margin-bottom: 10px;">
+  <img src="/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-7.png" class="">
+  <figcaption style="text-align: center;"><em>又一个多余的标签</em></figcaption>
+</figure>
+
+<figure style="border:1px solid #292d3e; margin-bottom: 10px;">
+  <img src="/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-4.png" class="">
+  <figcaption style="text-align: center;"><em>冗余属性</em></figcaption>
+</figure>
+
+<figure style="border:1px solid #292d3e; margin-bottom: 10px;">
+  <img src="/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-5.png" class="">
+  <figcaption style="text-align: center;"><em>定义但没使用的字段</em></figcaption>
+</figure>
+
+<figure style="border:1px solid #292d3e; margin-bottom: 10px;">
+  <img src="/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-6.png" class="">
+  <figcaption style="text-align: center;"><em>重复字段</em></figcaption>
+</figure>
+
+<figure style="border:1px solid #292d3e; margin-bottom: 10px;">
+  <img src="/2023/01/10/Vue%E9%A1%B9%E7%9B%AE%E5%BC%95%E5%85%A5Eslint-Prettier/lint-error-8.png" class="">
+  <figcaption style="text-align: center;"><em>属性未定义类型</em></figcaption>
+</figure>
+
+<p>最后格式化代码</p>
+<figure class="highlight shell"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run format</span><br></pre></td></tr></tbody></table></figure>
+
+<p>上面的方式会处理 <code>src</code> 目录下（除了 <code>src/asset</code> 外的所有代码，只需要进行一次</p>
+<p>对于新开发的代码，可以利用插件进行语法检查和格式化，然后再合并进仓库</p>
+<h2 id="VSCODE-插件"><a href="#VSCODE-插件" class="headerlink" title="VSCODE 插件"></a>VSCODE 插件</h2><p>借助 <a href="https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint">dbaeumer.vscode-eslint</a> 和 <a href="https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode">esbenp.prettier-vscode</a> 在开发时就能完成代码的语法检查和格式化</p>
+<ul>
+<li>将 <a href="https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint">prettier</a> 设置为默认代码格式化工具</li>
+<li>取消 <a href="https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode">eslint</a> 的代码格式化功能</li>
+<li>prettier 插件设置<ul>
+<li>配置文件路径设置为 <code>./.prettierrc.js</code></li>
+</ul>
+</li>
+</ul>
+<p>插件配置</p>
+<figure class="highlight json"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">{</span></span><br><span class="line">  <span class="attr">"editor.codeActionsOnSave"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">    <span class="attr">"source.fixAll.eslint"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">  <span class="punctuation">}</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"editor.formatOnSave"</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">"eslint.validate"</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">"javascript"</span><span class="punctuation">,</span> <span class="string">"javascriptreact"</span><span class="punctuation">,</span> <span class="string">"vue"</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">}</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>保存代码时自动进行语法检查、修复和格式化</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/01/17/%E4%B8%80%E7%82%B9%E6%80%9D%E7%B4%A2/" rel="prev" title="一点思索">
+                  <i class="fa fa-angle-left"></i> 一点思索
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/12/06/%E6%97%A0%E9%9A%9C%E7%A2%8D%E5%BC%80%E5%8F%91%E7%AC%94%E8%AE%B0/" rel="next" title="无障碍开发笔记">
+                  无障碍开发笔记 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">riki</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">40k</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.0.8/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
+</html>

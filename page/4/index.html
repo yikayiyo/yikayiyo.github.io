@@ -153,7 +153,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-count">61</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -181,6 +181,371 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2020/06/29/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%BA%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+      <meta itemprop="name" content="yikayiyo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Misbehavior">
+      <meta itemprop="description" content="浪漫在哪里">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Misbehavior">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/06/29/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%BA%8C/" class="post-title-link" itemprop="url">网站性能提升最佳实践二</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-06-29 15:33:05" itemprop="dateCreated datePublished" datetime="2020-06-29T15:33:05+08:00">2020-06-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><a href="https://developer.yahoo.com/performance/rules.html?guccounter=1#csslink">https://developer.yahoo.com/performance/rules.html?guccounter=1#csslink</a></p>
+<ul>
+<li>Content</li>
+<li>Server</li>
+<li>Cookie</li>
+<li>CSS</li>
+<li>JavaScript</li>
+<li>Images</li>
+<li>Mobile</li>
+</ul>
+<p>原文从七个方面总结网站性能提升。</p>
+<p>本篇总结Server方面。</p>
+<h3 id="Use-a-Content-Delivery-Network-CDN-使用内容分发网络"><a href="#Use-a-Content-Delivery-Network-CDN-使用内容分发网络" class="headerlink" title="Use a Content Delivery Network (CDN)使用内容分发网络"></a><a href="https://developer.yahoo.com/performance/rules.html#cdn">Use a Content Delivery Network (CDN)</a>使用内容分发网络</h3><p>用户到服务器的距离会影响响应时间，比如当我们访问美国的服务器和中国的服务器<br>用户80%-90%的<strong>响应时间</strong>用来下载页面上的内容<br>为了加速这个：</p>
+<ul>
+<li><p>不要轻易尝试将web应用改为分布式架构</p>
+</li>
+<li><p>可以尝试使用CDN，将静态内容分散（切换到CDN是个相对简单的代码变化，将极大地提高网站速度</p>
+</li>
+</ul>
+<p>一个内容分发网络是<strong>分布在多地的服务器集合</strong>，可以更有效地向用户提供内容</p>
+<h3 id="Add-Expires-or-Cache-Control-Header添加Expires或Cache-Control头"><a href="#Add-Expires-or-Cache-Control-Header添加Expires或Cache-Control头" class="headerlink" title="Add Expires or Cache-Control Header添加Expires或Cache-Control头"></a><a href="https://developer.yahoo.com/performance/rules.html#expires">Add Expires or Cache-Control Header</a>添加Expires或Cache-Control头</h3><ol>
+<li>对于静态组件，设置一个长期的Expires头，表示该请求“永不过期”</li>
+<li>对于动态组件，使用适当的Cache-Control头，来帮助浏览器有条件的进行请求</li>
+</ol>
+<p>网页被首次访问时需要大量的HTTP请求，通过使用Expires头，可以使请求过的组件<u>可缓存</u>，避免后续访问时的重复请求。也就是说，这个操作是对后续的请求有影响</p>
+<p>对于性能的提升，取决你对这个网站的访问频率</p>
+<p>Web服务器在<strong>HTTP响应</strong>中添加的Expires头告诉客户端可以将组件缓存多长时间</p>
+<p>如果使用了长期的Expires头，当组件发生改变时，组件名应该改变（构建阶段处理：将组件版本号加到组件名中</p>
+<h3 id="Gzip-Components压缩组件"><a href="#Gzip-Components压缩组件" class="headerlink" title="Gzip Components压缩组件"></a><a href="https://developer.yahoo.com/performance/rules.html#gzip">Gzip Components</a>压缩组件</h3><p>通过<strong>压缩HTTP响应</strong>来减少响应时间</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/06/29/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%BA%8C/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2020/06/22/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%B8%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+      <meta itemprop="name" content="yikayiyo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Misbehavior">
+      <meta itemprop="description" content="浪漫在哪里">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Misbehavior">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/06/22/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%B8%80/" class="post-title-link" itemprop="url">网站性能提升最佳实践一</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-06-22 22:51:53" itemprop="dateCreated datePublished" datetime="2020-06-22T22:51:53+08:00">2020-06-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>972</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><a href="https://developer.yahoo.com/performance/rules.html?guccounter=1#csslink">https://developer.yahoo.com/performance/rules.html?guccounter=1#csslink</a></p>
+<ul>
+<li>Content</li>
+<li>Server</li>
+<li>Cookie</li>
+<li>CSS</li>
+<li>JavaScript</li>
+<li>Images</li>
+<li>Mobile</li>
+</ul>
+<p>原文从七个方面总结网站性能提升。</p>
+<p>本篇总结Content方面。</p>
+<h3 id="Make-Fewer-HTTP-Requests-减少HTTP请求"><a href="#Make-Fewer-HTTP-Requests-减少HTTP请求" class="headerlink" title="Make Fewer HTTP Requests 减少HTTP请求"></a><a href="https://developer.yahoo.com/performance/rules.html#num_http">Make Fewer HTTP Requests</a> 减少HTTP请求</h3><p>减少页面的组件数量，可以减少HTTP请求数量。</p>
+<p>减少页面组件的方法：</p>
+<ul>
+<li><p>精简页面设计</p>
+</li>
+<li><p>不简化设计的情况下：</p>
+<ul>
+<li>文件组合（js文件放到一个里面，css文件放到一个里面）</li>
+</ul>
+</li>
+<li><p><a href="https://css-tricks.com/css-sprites/">CSS Sprites</a>：背景图片合并成一张，利用css属性设置各个部分到相对应的页面</p>
+<ul>
+<li><a href="https://css-tricks.com/examples/CSSClip/">CSS Sprites with Inline Images</a> 也可以用来处理图片</li>
+</ul>
+</li>
+<li><p>将内联图片放到css文件中（ Combining inline images into your cached stylesheets is a way to reduce HTTP requests and avoid increasing the size of your pages ？How ? ( Todo: find demo</p>
+</li>
+</ul>
+<h3 id="Reduce-DNS-Lookups-减少DNS查询"><a href="#Reduce-DNS-Lookups-减少DNS查询" class="headerlink" title="Reduce DNS Lookups 减少DNS查询"></a><a href="https://developer.yahoo.com/performance/rules.html#dns_lookups">Reduce DNS Lookups</a> 减少DNS查询</h3><p>减少网站的主机名（hostnames），可以减少DNS查询次数</p>
+<p>但是减少网站主机名会减少页面的并发下载量</p>
+<blockquote>
+<p>Trade-off：Avoiding DNS lookups cuts response times, but reducing parallel downloads may increase response times. </p>
+</blockquote>
+<p> Guide：Split components across <strong>at least two but no more than four</strong> hostnames.</p>
+<h3 id="Avoid-Redirects-避免网站重定向"><a href="#Avoid-Redirects-避免网站重定向" class="headerlink" title="Avoid Redirects 避免网站重定向"></a><a href="https://developer.yahoo.com/performance/rules.html#redirects">Avoid Redirects</a> 避免网站重定向</h3><p>最经常发生的重定向：应该加/的地方没有加/</p>
+<p>重定向可以用来从旧网站跳转到新网站</p>
+<p>重定向也可以用来连接网站的不同部分、根据特定情况让用户跳转</p>
+<p>解决办法：</p>
+<ul>
+<li><p>如果两个网站在同一个服务器，使用 <code>Alias and mod_rewrite</code></p>
+</li>
+<li><p>如果是网站换了个新域名，创建一个CNAME (a DNS record that creates an alias pointing from one domain name to another)，结合<code>Alias or mod_rewrite</code></p>
+</li>
+</ul>
+<h3 id="Make-Ajax-Cacheable-缓存Ajax请求"><a href="#Make-Ajax-Cacheable-缓存Ajax请求" class="headerlink" title="Make Ajax Cacheable 缓存Ajax请求"></a><a href="https://developer.yahoo.com/performance/rules.html#cacheajax">Make Ajax Cacheable</a> 缓存Ajax请求</h3><p><strong>异步不等于即时</strong></p>
+<p>优化异步请求：</p>
+<ul>
+<li>缓存Ajax请求</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/06/22/%E7%BD%91%E7%AB%99%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%E4%B8%80/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2020/06/18/surface%E6%B5%8B%E8%AF%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
+      <meta itemprop="name" content="yikayiyo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Misbehavior">
+      <meta itemprop="description" content="浪漫在哪里">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Misbehavior">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/06/18/surface%E6%B5%8B%E8%AF%95/" class="post-title-link" itemprop="url">surface测试</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-06-18 17:21:24" itemprop="dateCreated datePublished" datetime="2020-06-18T17:21:24+08:00">2020-06-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>15</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>surface上写博客，完事之后各端同步测试。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -399,302 +764,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2020/02/11/%E5%81%A5%E5%BA%B7%E7%9A%84%E6%AD%A6%E6%B1%89/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
-      <meta itemprop="name" content="yikayiyo">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Misbehavior">
-      <meta itemprop="description" content="浪漫在哪里">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Misbehavior">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/11/%E5%81%A5%E5%BA%B7%E7%9A%84%E6%AD%A6%E6%B1%89/" class="post-title-link" itemprop="url">健康的武汉</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-11 20:35:30" itemprop="dateCreated datePublished" datetime="2020-02-11T20:35:30+08:00">2020-02-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>153</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>一个健康的社会不该只有一种声音。</p>
-</blockquote>
-<p>哪里也去不了，就不停地刷屏。</p>
-<p>医护人员在医院休息室嚎啕大哭，火化工人在殡仪馆唱歌给自己打气，主妇在阳台上绝望地哭喊救命，电话里快要崩溃的发自党性的咆哮…</p>
-<p>房间的门被焊被锁被堵，外出的车队在高速上排成长龙，为了活命想偷渡到隔壁省却发现河对岸一排一排的人在围追堵截…</p>
-<p>和新闻里的完全不一样。</p>
-<p>我听到了两种声音。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2020/01/16/Pipelining/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
-      <meta itemprop="name" content="yikayiyo">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Misbehavior">
-      <meta itemprop="description" content="浪漫在哪里">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Misbehavior">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/01/16/Pipelining/" class="post-title-link" itemprop="url">Data flow Synchronization and Pipelining</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-01-16 12:02:58" itemprop="dateCreated datePublished" datetime="2020-01-16T12:02:58+08:00">2020-01-16</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>13</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>1 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><a href="https://www.coursera.org/learn/parallel-programming-in-java/">https://www.coursera.org/learn/parallel-programming-in-java/</a></p>
-<h3 id="Split-phase-Barriers-with-Java-Phasers"><a href="#Split-phase-Barriers-with-Java-Phasers" class="headerlink" title="Split-phase Barriers with Java Phasers"></a>Split-phase Barriers with Java Phasers</h3>
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://yikayiyo.github.io/2020/01/13/Loop%20Parallelism/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/22975826?v=3&s=460">
-      <meta itemprop="name" content="yikayiyo">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Misbehavior">
-      <meta itemprop="description" content="浪漫在哪里">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Misbehavior">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/01/13/Loop%20Parallelism/" class="post-title-link" itemprop="url">Loop Parallelism</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-01-13 13:49:17" itemprop="dateCreated datePublished" datetime="2020-01-13T13:49:17+08:00">2020-01-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-11-22 18:18:22" itemprop="dateModified" datetime="2023-11-22T18:18:22+08:00">2023-11-22</time>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>671</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>2 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="Parallel-Loops"><a href="#Parallel-Loops" class="headerlink" title="Parallel Loops"></a>Parallel Loops</h3><p>未知循环次数，利用了指针的for循环<br>每一个迭代当作一个子任务，<code>finish</code>约束整个循环</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">finish {</span><br><span class="line">    <span class="keyword">for</span> (p = head; p != <span class="literal">null</span> ; p = p.next) </span><br><span class="line">        async <span class="title function_">compute</span><span class="params">(p)</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<p>已知循环次数n，可以利用<code>forall</code></p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vector addition</span></span><br><span class="line">forall (i : [<span class="number">0</span>:n-<span class="number">1</span>]) </span><br><span class="line">    a[i] = b[i] + c[i]</span><br></pre></td></tr></tbody></table></figure>
-
-<p>利用 Java streams，上述功能有更加简洁的表达方式</p>
-<figure class="highlight java"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">a = IntStream.rangeClosed(<span class="number">0</span>, N-<span class="number">1</span>).parallel().toArray(i -&gt; b[i] + c[i]);</span><br></pre></td></tr></tbody></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/01/13/Loop%20Parallelism/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
@@ -717,7 +788,7 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>站点总字数：</span>
-    <span title="站点总字数">37k</span>
+    <span title="站点总字数">40k</span>
   </span>
 </div>
 
